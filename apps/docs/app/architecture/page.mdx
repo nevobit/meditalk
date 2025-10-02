@@ -1,0 +1,382 @@
+# Architecture Overview
+
+This document provides a high-level overview of the repo platform architecture, including system design, technology choices, and architectural patterns.
+
+## System Architecture
+
+repo is built as a **microservices-based platform** with a **monorepo structure** that enables rapid development, deployment, and scaling.
+
+### High-Level Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Web Portal    │    │  Mobile App     │    │  Marketing Site │
+│   (Next.js)     │    │ (React Native)  │    │   (Next.js)     │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   API Gateway   │
+                    │   (Load Bal.)   │
+                    └─────────────────┘
+                                 │
+         ┌───────────────────────┼───────────────────────┐
+         │                       │                       │
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  GraphQL API    │    │   REST API      │    │   Webhooks      │
+│  (Apollo)       │    │  (Fastify)      │    │   (Events)      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   Business      │
+                    │   Logic Layer   │
+                    └─────────────────┘
+                                 │
+                    ┌─────────────────┐
+                    │   Data Layer    │
+                    │ (PostgreSQL +   │
+                    │   Redis)        │
+                    └─────────────────┘
+```
+
+### Runtime Topology
+
+```
+
+                                     Internet
+                                        │
+     ┌───────────────────────────────────┴───────────────────────────────────┐
+     │                        Edge & Networking                             │
+     │  CDN (static, images)  │  WAF (rules/rate-limit)  │  DNS (ALIAS/CNAME)│
+     └───────────────┬────────┴───────────┬──────────────┴──────────────────┘
+                     │                    │
+          ┌──────────▼──────────┐  ┌──────▼──────────────────────┐
+          │ Next.js Site (SSR)  │  │ Next.js Portal (SSR, App R.)│
+          │ apps/site           │  │ apps/portal                  │
+          └──────────┬──────────┘  └──────────┬──────────────────┘
+                     │                        │
+                     └───────────────┬────────┘
+                                     │
+                           ┌─────────▼─────────┐
+                           │   API Gateway     │  (LB + routing + authn)
+                           │ infra/gateway     │
+                           └─────────┬─────────┘
+                ┌────────────────────┼────────────────────┐
+                │                    │                    │
+        ┌───────▼───────┐     ┌─────▼────────┐     ┌─────▼────────┐
+        │ GraphQL API   │     │ REST API      │     │ Webhooks In   │
+        │ apps/graphql  │     │ apps/rest     │     │ apps/webhooks │
+        │ Apollo Server │     │ Fastify       │     │ (ingress)     │
+        └───────┬───────┘     └─────┬────────┘     └─────┬────────┘
+                │                   │                        │
+                └───────────────┬───┴───────────────┬───────┘
+                                │                   │
+                         ┌──────▼──────┐     ┌──────▼──────┐
+                         │ Business    │     │ Event Bus   │  SNS/Kafka
+                         │ Logic       │     │ + Queues    │  SQS/Queue
+                         │ packages/*  │     │ apps/jobs   │
+                         └──────┬──────┘     └──────┬──────┘
+                                │                   │ (async commands/events)
+   ┌────────────────────────────┼───────────────────┼─────────────────────────┐
+   │                           Data Plane                                       │
+   │ ┌────────────┐  ┌──────────────┐  ┌───────────┐  ┌───────────┐           │
+   │ │ PostgreSQL │  │ Redis Cache  │  │ S3/Object │  │ Search     │ (opt)     │
+   │ │ infra/db   │  │ infra/cache  │  │ Storage   │  │ (OpenSearch│           │
+   │ │ prisma/drz │  │ sessions/ded │  │ assets    │  │  /Algolia) │           │
+   │ └────────────┘  └──────────────┘  └───────────┘  └───────────┘           │
+   └───────────────────────────────────────────────────────────────────────────┘
+
+  Observability: logs/metrics/traces (Sentry, Prometheus, OpenTelemetry, Grafana)
+  Secrets: Vault/SM, KMS; Feature Flags: packages/tools/ff; Config: env + IaC.
+```
+
+## Monorepo Structure
+
+Our monorepo is organized to maximize code sharing while maintaining clear boundaries:
+
+```
+repo/
+├── apps/                    # Applications
+│   ├── portal/             # Main web application
+│   ├── mobile/             # React Native mobile app
+│   ├── site/               # Marketing website
+│   ├── graphql/            # GraphQL API server
+│   └── rest/               # REST API server
+├── packages/               # Shared packages
+│   ├── design-system/      # UI component library
+│   ├── sdk/               # Client SDK
+│   ├── business-logic/     # Core business rules
+│   ├── core-modules/       # Shared core functionality
+│   ├── data-sources/       # Database and external APIs
+│   ├── contracts/          # Type definitions
+│   ├── cli/               # Command-line tools
+│   └── ...                # Other shared packages
+├── infrastructure/         # Infrastructure as Code
+│   ├── terraform/         # Terraform configurations
+│   └── k8s/              # Kubernetes manifests
+├── lambdas/               # Serverless functions
+└── docs/                  # Documentation
+```
+
+## Technology Stack
+
+### Frontend Technologies
+
+- **React 18** - UI framework with concurrent features
+- **Next.js 14** - Full-stack React framework
+- **React Native** - Cross-platform mobile development
+- **TypeScript** - Type-safe JavaScript
+- **Design System** - Consistent UI components
+
+### Backend Technologies
+
+- **Node.js** - JavaScript runtime
+- **Apollo Server** - GraphQL server
+- **Fastify** - High-performance REST framework
+- **TypeScript** - Type-safe development
+- **PostgreSQL** - Primary database
+- **Redis** - Caching and sessions
+
+### Infrastructure
+
+- **Kubernetes** - Container orchestration
+- **AWS** - Cloud infrastructure
+- **Terraform** - Infrastructure as Code
+- **Docker** - Containerization
+- **Helm** - Kubernetes package manager
+
+### Development Tools
+
+- **pnpm** - Fast package manager
+- **Turbo** - Build system
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Vitest** - Unit testing
+- **Playwright** - E2E testing
+
+## Architectural Patterns
+
+### 1. Domain-Driven Design (DDD)
+
+We organize our code around business domains rather than technical concerns:
+
+```
+packages/business-logic/
+├── user-management/      # User domain
+├── product-catalog/      # Product domain
+├── order-processing/     # Order domain
+└── payment-processing/   # Payment domain
+```
+
+### 2. Clean Architecture
+
+Our applications follow clean architecture principles:
+
+```
+┌─────────────────────────────────────┐
+│           Presentation Layer        │
+│        (Controllers, UI)            │
+├─────────────────────────────────────┤
+│           Application Layer         │
+│        (Use Cases, Services)        │
+├─────────────────────────────────────┤
+│           Domain Layer              │
+│        (Entities, Business Rules)   │
+├─────────────────────────────────────┤
+│           Infrastructure Layer      │
+│        (Database, External APIs)    │
+└─────────────────────────────────────┘
+```
+
+### 3. Event-Driven Architecture
+
+We use events for loose coupling between services:
+
+```typescript
+// Event publishing
+await eventBus.publish('user.created', {
+  userId: '123',
+  email: 'user@example.com',
+  timestamp: new Date(),
+});
+
+// Event handling
+eventBus.subscribe('user.created', async (event) => {
+  await sendWelcomeEmail(event.email);
+  await createUserProfile(event.userId);
+});
+```
+
+### 4. CQRS (Command Query Responsibility Segregation)
+
+We separate read and write operations:
+
+```typescript
+// Commands (write operations)
+class CreateUserCommand {
+  constructor(
+    public readonly email: string,
+    public readonly password: string,
+  ) {}
+}
+
+// Queries (read operations)
+class GetUserQuery {
+  constructor(public readonly userId: string) {}
+}
+```
+
+## Data Architecture
+
+### Database Design
+
+We use PostgreSQL as our primary database with the following design principles:
+
+- **Normalized schema** for data integrity
+- **Indexes** for performance optimization
+- **Migrations** for schema versioning
+- **Connection pooling** for scalability
+
+### Caching Strategy
+
+Redis is used for multiple caching purposes:
+
+- **Session storage** - User sessions and authentication
+- **API response caching** - Frequently accessed data
+- **Rate limiting** - API usage limits
+- **Real-time features** - WebSocket state management
+
+### Data Flow
+
+```
+Client Request → API Gateway → Service → Business Logic → Data Layer
+                                    ↓
+                              Cache Layer (Redis)
+                                    ↓
+                              Database (PostgreSQL)
+```
+
+## Security Architecture
+
+### Authentication & Authorization
+
+- **JWT tokens** for stateless authentication
+- **OAuth 2.0** for third-party integrations
+- **Role-based access control (RBAC)** for authorization
+- **API keys** for service-to-service communication
+
+### Security Measures
+
+- **HTTPS/TLS** for all communications
+- **CORS** policies for web applications
+- **Rate limiting** to prevent abuse
+- **Input validation** and sanitization
+- **SQL injection** prevention
+- **XSS protection** with CSP headers
+
+## Scalability Patterns
+
+### Horizontal Scaling
+
+- **Stateless services** for easy scaling
+- **Load balancing** across multiple instances
+- **Database read replicas** for read-heavy workloads
+- **CDN** for static asset delivery
+
+### Performance Optimization
+
+- **Database indexing** for query optimization
+- **Connection pooling** for database efficiency
+- **Caching strategies** for frequently accessed data
+- **Code splitting** for frontend performance
+- **Lazy loading** for on-demand resource loading
+
+## Deployment Architecture
+
+### Environment Strategy
+
+```
+Development → Staging → Production
+     ↓           ↓          ↓
+   Local      Pre-prod    Live
+  Testing     Testing    Users
+```
+
+### CI/CD Pipeline
+
+```
+Code Push → Tests → Build → Deploy → Monitor
+    ↓        ↓       ↓        ↓        ↓
+  GitHub   Jest   Docker   K8s    Prometheus
+  Actions  Vitest  Build   Helm   Grafana
+```
+
+### Infrastructure as Code
+
+- **Terraform** for AWS resource management
+- **Kubernetes manifests** for container orchestration
+- **Helm charts** for application packaging
+- **Docker Compose** for local development
+
+## Monitoring & Observability
+
+### Logging
+
+- **Structured logging** with correlation IDs
+- **Centralized log aggregation** with ELK stack
+- **Log levels** for different environments
+- **Performance logging** for optimization
+
+### Metrics
+
+- **Application metrics** with Prometheus
+- **Business metrics** for KPI tracking
+- **Infrastructure metrics** for resource monitoring
+- **Custom dashboards** with Grafana
+
+### Tracing
+
+- **Distributed tracing** with OpenTelemetry
+- **Request correlation** across services
+- **Performance profiling** for bottlenecks
+- **Error tracking** with Sentry
+
+## Disaster Recovery
+
+### Backup Strategy
+
+- **Automated database backups** with point-in-time recovery
+- **Configuration backups** for infrastructure
+- **Code backups** with version control
+- **Cross-region replication** for critical data
+
+### Recovery Procedures
+
+- **RTO (Recovery Time Objective)**: 4 hours
+- **RPO (Recovery Point Objective)**: 1 hour
+- **Automated failover** for critical services
+- **Manual recovery** procedures documented
+
+## Future Considerations
+
+### Planned Improvements
+
+- **Service mesh** implementation for advanced networking
+- **Event sourcing** for audit trails
+- **GraphQL federation** for microservices
+- **Edge computing** for global performance
+- **Machine learning** integration for insights
+
+### Technology Evolution
+
+- **Framework updates** and security patches
+- **Performance optimizations** based on metrics
+- **New feature development** based on user feedback
+- **Infrastructure modernization** as needed
+
+---
+
+For detailed information about specific architectural decisions, see our **[Architecture Decision Records (ADRs)](./decisions)**.

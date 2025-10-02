@@ -1,0 +1,60 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-2);
+  }
+  .label {
+    font-size: var(--ds-font-size-14);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--ds-space-3);
+  }
+
+  .input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ds-pad-2) var(--ds-pad-3);
+    border-radius: var(--ds-radius-6);
+    background: var(--ds-button-bg);
+    color: var(--ds-button-fg);
+    border: 1px solid var(--ds-button-border);
+    cursor: pointer;
+  }
+  .button:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-focus-ring-action);
+  }
+
+  .filename {
+    font-size: var(--ds-font-size-14);
+    color: var(--ds-fg-muted);
+    min-height: 2.4rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+  }
+  .hint {
+    color: var(--ds-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+}

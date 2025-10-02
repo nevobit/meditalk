@@ -1,0 +1,51 @@
+---
+title: 'Color'
+description: 'Semantic color system with theme support. OKLCH by default.'
+---
+
+# Color
+
+Color is **semantic** first. We expose CSS variables with `--ds-` prefix and use **OKLCH** for perceptual consistency.
+
+## Principles
+
+- Prefer **semantic roles**: `--ds-color-primary`, `--ds-color-success`, etc.
+- Maintain **AA/AAA contrast** (WCAG 2.2).
+- Support **themes** (light/dark).
+
+## Base variables
+
+```css
+@layer foundation {
+  :root {
+    /* Brand (OKLCH tuple without the function wrapper) */
+    --ds-color-primary: 0.62 0.12 265;
+    --ds-color-on-primary: #ffffff;
+
+    /* Semantic */
+    --ds-color-success: 0.72 0.16 145;
+    --ds-color-warning: 0.83 0.2 95;
+    --ds-color-danger: 0.62 0.25 27;
+    --ds-color-info: 0.75 0.12 240;
+
+    /* Surfaces & Text */
+    --ds-color-bg: #ffffff;
+    --ds-color-bg-muted: #f6f7f9;
+    --ds-color-text: #0b1220;
+    --ds-color-text-muted: #5b6475;
+
+    /* Borders */
+    --ds-color-border: #e6e7eb;
+    --ds-color-divider: #eef0f3;
+  }
+
+  :root[data-theme='dark'] {
+    --ds-color-bg: #0b1220;
+    --ds-color-bg-muted: #0f172a;
+    --ds-color-text: #eaf0ff;
+    --ds-color-text-muted: #bac2d1;
+    --ds-color-border: #293044;
+    --ds-color-divider: #20263a;
+  }
+}
+```

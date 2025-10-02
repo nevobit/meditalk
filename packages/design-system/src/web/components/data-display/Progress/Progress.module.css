@@ -1,0 +1,14 @@
+@layer components {
+  .root {
+    width: 100%;
+    height: 0.8rem;
+    background: var(--ds-bg-subtle);
+    border-radius: var(--ds-radius-4);
+    overflow: hidden;
+  }
+  .bar {
+    height: 100%;
+    background: var(--ds-accent);
+    transition: width var(--ds-motion-duration-2);
+  }
+}

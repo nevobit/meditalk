@@ -1,0 +1,80 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-1);
+  }
+  .disabled {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+  .controlRow {
+    display: inline-grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: var(--ds-space-2);
+  }
+
+  .input {
+    appearance: none;
+    margin: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    border: var(--ds-border-width-1) solid var(--ds-border-default);
+    background: var(--ds-bg-elevated);
+    cursor: pointer;
+    position: relative;
+  }
+  .input:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-focus-ring-field);
+    border-color: var(--ds-input-border-focus);
+  }
+  .input:checked {
+    border-color: var(--ds-accent);
+  }
+
+  .box {
+    pointer-events: none;
+    position: absolute;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: inline-grid;
+    place-items: center;
+  }
+  .dot {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background: var(--ds-accent);
+    opacity: 0;
+    transition: opacity var(--ds-motion-duration-2);
+  }
+  .input:checked + .box .dot {
+    opacity: 1;
+  }
+
+  .label {
+    font-size: var(--ds-font-size-14);
+    cursor: pointer;
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+  }
+  .hint {
+    color: var(--ds-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+
+  .sm .input {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  .lg .input {
+    width: 2rem;
+    height: 2rem;
+  }
+}

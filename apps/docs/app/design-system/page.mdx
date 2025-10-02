@@ -1,0 +1,195 @@
+---
+title: 'Introduction'
+---
+
+# Design System
+
+Welcome to the repo Design System. This comprehensive guide covers our design principles, components, and implementation guidelines.
+
+## What is the Design System?
+
+Our Design System is a collection of reusable components, guided by clear standards, that can be assembled together to build any number of applications. It provides:
+
+- **Consistency**: Unified design language across all platforms
+- **Efficiency**: Reusable components that speed up development
+- **Accessibility**: WCAG 2.1 AA compliant components
+- **Scalability**: Flexible system that grows with our needs
+
+## Design Principles
+
+### 1. **Consistency**
+
+Every component follows the same design patterns and behaviors, ensuring a cohesive user experience across all applications.
+
+### 2. **Accessibility First**
+
+All components are built with accessibility in mind, supporting screen readers, keyboard navigation, and high contrast modes.
+
+### 3. **Performance**
+
+Components are optimized for performance, with minimal bundle size and efficient rendering.
+
+### 4. **Flexibility**
+
+The system is designed to be flexible and customizable while maintaining design consistency.
+
+### 5. **Documentation**
+
+Every component is thoroughly documented with examples, usage guidelines, and accessibility notes.
+
+## Platform Support
+
+Our Design System supports multiple platforms:
+
+- **Web**: React components for web applications
+- **Mobile**: React Native components for mobile apps
+- **Design Tokens**: Platform-agnostic design values
+
+## Getting Started
+
+### Installation
+
+```bash
+# Install the design system package
+pnpm add {{packageName}}/design-system
+```
+
+### Basic Usage
+
+```tsx
+import { Button, Card, Text } from '{{packageName}}/design-system';
+
+function MyComponent() {
+  return (
+    <Card>
+      <Text variant="heading">Welcome</Text>
+      <Button variant="primary" onClick={() => {}}>
+        Get Started
+      </Button>
+    </Card>
+  );
+}
+```
+
+### Theme Provider
+
+Wrap your application with the ThemeProvider for consistent theming:
+
+```tsx
+import { ThemeProvider } from '{{packageName}}/design-system';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+## Component Categories
+
+### Data Entry
+
+Components for user input and form interactions:
+
+- [Button](./components#button)
+- [Input](./components#input)
+- [Select](./components#select)
+- [Checkbox](./components#checkbox)
+- [Radio](./components#radio)
+
+### Data Display
+
+Components for presenting information:
+
+- [Card](./components#card)
+- [Table](./components#table)
+- [Badge](./components#badge)
+- [Avatar](./components#avatar)
+
+### Feedback
+
+Components for user feedback and notifications:
+
+- [Toast](./components#toast)
+- [Alert](./components#alert)
+- [Modal](./components#modal)
+
+### Navigation
+
+Components for navigation and wayfinding:
+
+- [Breadcrumb](./components#breadcrumb)
+- [Pagination](./components#pagination)
+- [Tabs](./components#tabs)
+
+## Design Tokens
+
+Design tokens are the foundational design decisions that form the basis of our design system:
+
+- **[Colors](./tokens#colors)** - Color palette and semantic colors
+- **[Typography](./tokens#typography)** - Font families, sizes, and weights
+- **[Spacing](./tokens#spacing)** - Consistent spacing scale
+- **[Shadows](./tokens#shadows)** - Elevation and depth
+- **[Border Radius](./tokens#border-radius)** - Corner rounding values
+
+## Accessibility
+
+Our Design System follows WCAG 2.1 AA guidelines:
+
+- **Keyboard Navigation**: All interactive elements are keyboard accessible
+- **Screen Reader Support**: Proper ARIA labels and semantic HTML
+- **Color Contrast**: All color combinations meet accessibility standards
+- **Focus Management**: Clear focus indicators and logical tab order
+
+## Theming
+
+The Design System supports theming and customization:
+
+- **Light/Dark Mode**: Built-in theme switching
+- **Custom Themes**: Create brand-specific themes
+- **CSS Custom Properties**: Override specific design tokens
+- **Component-Level Customization**: Style individual components
+
+## Development
+
+### Contributing to the Design System
+
+1. **Component Development**: Create new components following our guidelines
+2. **Documentation**: Update documentation with examples and usage notes
+3. **Testing**: Ensure components work across all supported platforms
+4. **Accessibility**: Verify accessibility compliance
+
+### Development Workflow
+
+```bash
+# Start the design system development server
+pnpm dev:design
+
+# Run tests
+pnpm test:design
+
+# Build the package
+pnpm build:design
+```
+
+## Resources
+
+- **[Component Library](./components)** - Browse all available components
+- **[Design Tokens](./tokens)** - Explore design tokens and values
+- **[Patterns](./patterns)** - Common design patterns and layouts
+- **[Accessibility Guide](./a11y)** - Accessibility guidelines and best practices
+- **[Theming Guide](./theming)** - Customization and theming options
+- **[Motion Guidelines](./motion)** - Animation and transition principles
+
+## Support
+
+- **Documentation**: This site contains comprehensive guides
+- **Storybook**: Interactive component playground
+- **GitHub Issues**: Report bugs and request features
+- **Design Team**: Reach out for design-related questions
+
+---
+
+Ready to explore? Start with the **[Component Library](./components)** or dive into **[Design Tokens](./tokens)**.

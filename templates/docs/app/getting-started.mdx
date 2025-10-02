@@ -1,0 +1,264 @@
+# Getting Started
+
+This guide will help you set up your development environment and get started with the repo platform.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+### Required Software
+
+- **Node.js** 18.0.0 or higher
+- **pnpm** 8.0.0 or higher
+- **Git** 2.30.0 or higher
+- **Docker** 20.10.0 or higher (for local development)
+
+### Optional Software
+
+- **VS Code** with recommended extensions
+- **Postman** or **Insomnia** for API testing
+- **React Native CLI** for mobile development
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/repo/repo.git
+cd repo
+```
+
+### 2. Install Dependencies
+
+```bash
+# Install all dependencies across the monorepo
+pnpm install
+```
+
+### 3. Environment Setup
+
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit the environment file with your local configuration
+# You'll need to set up database URLs, API keys, etc.
+```
+
+### 4. Database Setup
+
+```bash
+# Start local PostgreSQL and Redis with Docker
+docker-compose up -d postgres redis
+
+# Run database migrations
+pnpm db:migrate
+
+# Seed the database with initial data
+pnpm db:seed
+```
+
+## Development Workflow
+
+### Starting Development Servers
+
+```bash
+# Start all development servers
+pnpm dev
+
+# Or start specific services
+pnpm dev:portal    # Web application
+pnpm dev:mobile    # Mobile development
+pnpm dev:graphql   # GraphQL API
+pnpm dev:rest      # REST API
+pnpm dev:site      # Marketing site
+```
+
+### Available Development URLs
+
+Once started, you can access:
+
+- **Portal**: http://localhost:3000
+- **Site**: http://localhost:3001
+- **GraphQL API**: http://localhost:4000/graphql
+- **REST API**: http://localhost:4001
+- **Design System**: http://localhost:6006
+
+### Building for Production
+
+```bash
+# Build all packages and applications
+pnpm build
+
+# Build specific applications
+pnpm build:portal
+pnpm build:mobile
+pnpm build:packages
+```
+
+## Project Structure
+
+### Applications (`apps/`)
+
+```
+apps/
+├── portal/          # Main web application (Next.js)
+├── mobile/          # React Native mobile app
+├── site/            # Marketing website (Next.js)
+├── graphql/         # GraphQL API server
+└── rest/            # REST API server
+```
+
+### Packages (`packages/`)
+
+```
+packages/
+├── design-system/   # UI component library
+├── sdk/            # Client SDK for APIs
+├── business-logic/  # Core business rules
+├── core-modules/    # Shared core functionality
+├── data-sources/    # Database and external APIs
+├── contracts/       # Type definitions and contracts
+├── cli/            # Command-line tools
+└── ...             # Other shared packages
+```
+
+## Development Guidelines
+
+### Code Style
+
+We use ESLint and Prettier for consistent code formatting:
+
+```bash
+# Check code style
+pnpm lint
+
+# Fix code style issues
+pnpm lint:fix
+
+# Format code
+pnpm format
+```
+
+### Testing
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Run specific test suites
+pnpm test:unit
+pnpm test:integration
+pnpm test:e2e
+```
+
+### Type Checking
+
+```bash
+# Check TypeScript types across the monorepo
+pnpm type-check
+```
+
+## Common Development Tasks
+
+### Adding a New Package
+
+```bash
+# Create a new package
+pnpm create-package my-new-package
+
+# Add dependencies
+cd packages/my-new-package
+pnpm add some-dependency
+```
+
+### Adding a New Application
+
+```bash
+# Create a new application
+pnpm create-app my-new-app
+
+# Add to workspace configuration
+# Update turbo.json for build pipeline
+```
+
+### Database Changes
+
+```bash
+# Create a new migration
+pnpm db:migration:create my-migration-name
+
+# Run migrations
+pnpm db:migrate
+
+# Rollback migrations
+pnpm db:rollback
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### Port Conflicts
+
+If you get port conflicts, check what's running:
+
+```bash
+# Check what's using a specific port
+lsof -i :3000
+
+# Kill processes using a port
+kill -9 $(lsof -t -i:3000)
+```
+
+#### Dependency Issues
+
+If you encounter dependency problems:
+
+```bash
+# Clear pnpm cache
+pnpm store prune
+
+# Remove node_modules and reinstall
+rm -rf node_modules
+pnpm install
+```
+
+#### Database Connection Issues
+
+If you can't connect to the database:
+
+```bash
+# Check if Docker containers are running
+docker ps
+
+# Restart database containers
+docker-compose restart postgres redis
+
+# Check database logs
+docker-compose logs postgres
+```
+
+### Getting Help
+
+- **Documentation**: Check the relevant sections in this documentation
+- **Issues**: Search existing issues on GitHub
+- **Discussions**: Ask questions in GitHub Discussions
+- **Team**: Reach out to the development team
+
+## Next Steps
+
+Now that you're set up, explore:
+
+1. **[Architecture Overview](./architecture/overview)** - Understand the system design
+2. **[Design System](./design-system/page)** - Learn about our UI components
+3. **[API Documentation](./api/graphql)** - Explore our APIs
+4. **[Contributing Guide](./contributing)** - Learn how to contribute
+
+Happy coding! 🚀

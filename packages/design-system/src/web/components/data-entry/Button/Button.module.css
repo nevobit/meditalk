@@ -1,0 +1,201 @@
+.button {
+  --_fg: var(--ds-button-fg);
+  --_bg: var(--ds-button-bg);
+  --_bd: var(--ds-button-border);
+  --_bg-hover: var(--ds-button-bg-hover);
+
+  color: var(--_fg);
+  background: var(--_bg);
+  border: 1px solid var(--_bd);
+  border-radius: var(--ds-radius-12);
+  padding-block: 8px;
+  padding-inline: 14px;
+  font-weight: var(--ds-font-weight-medium);
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.02s ease;
+  text-align: center;
+}
+
+.button:hover {
+  background: var(--_bg-hover);
+}
+.button:active {
+  transform: translateY(1px);
+}
+.button:focus-visible {
+  box-shadow: var(--ds-focus-ring);
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.loading {
+  cursor: progress;
+}
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+/* Sizes */
+.micro {
+  padding-block: 4px;
+  padding-inline: 8px;
+  font-size: var(--ds-font-size-10);
+}
+.slim {
+  padding-block: 6px;
+  padding-inline: 10px;
+  font-size: var(--ds-font-size-12);
+}
+.medium {
+  padding-block: 8px;
+  padding-inline: 14px;
+  font-size: var(--ds-font-size-14);
+}
+.large {
+  padding-block: 12px;
+  padding-inline: 18px;
+  font-size: var(--ds-font-size-16);
+}
+
+.left {
+  text-align: left;
+  justify-content: flex-start;
+}
+.right {
+  text-align: right;
+  justify-content: flex-end;
+}
+.center {
+  text-align: center;
+  justify-content: center;
+}
+.start {
+  text-align: start;
+  justify-content: flex-start;
+}
+.end {
+  text-align: end;
+  justify-content: flex-end;
+}
+
+.primary {
+  --_fg: var(--ds-accent-contrast);
+  --_bg: var(--ds-accent);
+  --_bd: var(--ds-accent);
+  --_bg-hover: color-mix(in srgb, var(--ds-accent) 90%, black);
+}
+.secondary {
+  --_fg: var(--ds-accent);
+  --_bg: transparent;
+  --_bd: var(--ds-accent);
+  --_bg-hover: color-mix(in srgb, var(--ds-accent) 10%, transparent);
+}
+.tertiary {
+  --_fg: var(--ds-accent);
+  --_bg: transparent;
+  --_bd: transparent;
+  --_bg-hover: var(--ds-color-bg-subtle);
+}
+.plain {
+  --_fg: var(--ds-accent);
+  --_bg: transparent;
+  --_bd: transparent;
+  --_bg-hover: color-mix(in srgb, var(--ds-accent) 10%, transparent);
+}
+.monochrome {
+  --_fg: var(--ds-color-fg-inverse);
+  --_bg: var(--ds-color-fg-default);
+  --_bd: var(--ds-color-fg-default);
+  --_bg-hover: color-mix(in srgb, var(--ds-color-fg-default) 90%, black);
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
+.monochromePlain {
+  --_fg: var(--ds-color-fg-default);
+  --_bg: transparent;
+  --_bd: var(--ds-color-fg-default);
+  --_bg-hover: color-mix(in srgb, var(--ds-color-fg-default) 10%, transparent);
+}
+
+.critical {
+  --_fg: #fff;
+  --_bg: var(--ds-danger);
+  --_bd: var(--ds-danger);
+  --_bg-hover: color-mix(in srgb, var(--ds-danger) 90%, black);
+}
+.success {
+  --_fg: #fff;
+  --_bg: var(--ds-success);
+  --_bd: var(--ds-success);
+  --_bg-hover: color-mix(in srgb, var(--ds-success) 90%, black);
+}
+
+.icon {
+  display: inline-flex;
+}
+.icon:first-child {
+  margin-inline-end: 4px;
+}
+.icon:last-child {
+  margin-inline-start: 4px;
+}
+
+.image {
+  width: 18px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: var(--ds-radius-4);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--ds-color-border-default);
+  border-top-color: var(--ds-accent);
+  border-radius: 50%;
+  animation: ds-spin 0.8s linear infinite;
+}
+
+@keyframes ds-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+/* Disclosure caret */
+.disclosure {
+  width: 0;
+  height: 0;
+  margin-inline-start: 4px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+}
+.disclosure--down {
+  border-top: 5px solid var(--ds-color-fg-muted);
+}
+.disclosure--up {
+  border-bottom: 5px solid var(--ds-color-fg-muted);
+}
+.disclosure--select {
+  border-top: 5px solid var(--ds-color-fg-muted);
+}

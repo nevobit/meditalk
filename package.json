@@ -1,0 +1,57 @@
+{
+  "name": "meditalk",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter=portal dev",
+    "dev:portal": "pnpm --filter=portal dev",
+    "dev:design-system": "pnpm --filter=@mdi/design-system dev:fast",
+    "build": "pnpm --filter=@mdi/design-system build",
+    "type-check": "pnpm --filter=@mdi/design-system type-check",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "release": "turbo release --concurrency=1",
+    "check-types": "turbo run check-types",
+    "prepare": "husky",
+    "lint:staged": "lint-staged",
+    "commitlint": "commitlint --from=HEAD~1 --to=HEAD",
+    "generate:icons": "pwa-asset-generator ./logo.svg ./public --background '#0b0b0c' --padding '20%' --opaque false --favicon false --manifest false"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.6",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/js": "^9.34.0",
+    "eslint": "^9.34.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "turbo": "^2.5.6",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.41.0"
+  },
+  "packageManager": "pnpm@10.5.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "lint-staged": {
+    "apps/**/*.{ts,jsx,tsx}": [
+      "eslint --fix"
+    ],
+    "packages/**/*.{ts,jsx,tsx}": [
+      "eslint --fix"
+    ],
+    "*json": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.85.6",
+    "@tanstack/react-query-devtools": "^5.85.6",
+    "react-router-dom": "^7.8.2",
+    "zustand": "^5.0.8"
+  }
+}

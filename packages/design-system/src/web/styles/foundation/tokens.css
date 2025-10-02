@@ -1,0 +1,140 @@
+@layer foundation {
+  :root {
+    --ds-color-neutral-0: #ffffff;
+    --ds-color-neutral-50: #f7f7f8;
+    --ds-color-neutral-100: #eeeeef;
+    --ds-color-neutral-200: #e2e3e5;
+    --ds-color-neutral-300: #cfd1d5;
+    --ds-color-neutral-400: #adb1b8;
+    --ds-color-neutral-500: #8b9099;
+    --ds-color-neutral-600: #696f7a;
+    --ds-color-neutral-700: #4c5360;
+    --ds-color-neutral-800: #353b46;
+    --ds-color-neutral-900: #1f2430;
+    --ds-color-neutral-1000: #0e1116;
+
+    --ds-color-primary-50: #fafafa;
+    --ds-color-primary-100: #f5f5f5;
+    --ds-color-primary-200: #e5e5e5;
+    --ds-color-primary-300: #d4d4d4;
+    --ds-color-primary-400: #a3a3a3;
+    --ds-color-primary-500: #737373;
+    --ds-color-primary-600: #525252;
+    --ds-color-primary-700: #404040;
+    --ds-color-primary-800: #262626;
+    --ds-color-primary-900: #171717;
+
+    --ds-color-success-500: #16a34a;
+    --ds-color-warning-500: #d97706;
+    --ds-color-danger-500: #dc2626;
+
+    --ds-brand-primary: var(--ds-color-primary-800);
+    --ds-brand-primary-contrast: #ffffff;
+
+    --ds-fg-default: var(--ds-color-neutral-900);
+    --ds-fg-muted: var(--ds-color-neutral-700);
+    --ds-fg-inverse: var(--ds-color-neutral-0);
+
+    --ds-bg-canvas: var(--ds-color-neutral-0);
+    --ds-bg-subtle: var(--ds-color-neutral-50);
+    --ds-bg-elevated: var(--ds-color-neutral-0);
+    --ds-bg-inverse: var(--ds-color-neutral-900);
+
+    --ds-border-default: var(--ds-color-neutral-200);
+    --ds-border-strong: var(--ds-color-neutral-300);
+    --ds-outline-focus: var(--ds-color-primary-600);
+
+    --ds-accent: var(--ds-brand-primary);
+    --ds-accent-contrast: var(--ds-brand-primary-contrast);
+
+    --ds-success: var(--ds-color-success-500);
+    --ds-warning: var(--ds-color-warning-500);
+    --ds-danger: var(--ds-color-danger-500);
+
+    --ds-font-sans:
+      ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, 'Noto Sans',
+      sans-serif;
+    --ds-font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+    --ds-font-size-12: clamp(1.1rem, 1rem + 0.2vw, 1.2rem);
+    --ds-font-size-14: clamp(1.3rem, 1.1rem + 0.25vw, 1.4rem);
+    --ds-font-size-16: clamp(1.5rem, 1.2rem + 0.4vw, 1.6rem);
+    --ds-font-size-18: clamp(1.7rem, 1.4rem + 0.5vw, 1.8rem);
+    --ds-font-size-20: clamp(1.9rem, 1.6rem + 0.6vw, 2rem);
+    --ds-font-size-24: clamp(2.2rem, 1.8rem + 0.9vw, 2.4rem);
+    --ds-font-size-30: clamp(2.6rem, 2rem + 1.4vw, 3rem);
+    --ds-font-size-36: clamp(3rem, 2.4rem + 2vw, 3.6rem);
+
+    --ds-line-height-tight: 1.2;
+    --ds-line-height-normal: 1.5;
+    --ds-line-height-relaxed: 1.7;
+
+    --ds-font-weight-light: 300;
+    --ds-font-weight-regular: 400;
+    --ds-font-weight-medium: 500;
+    --ds-font-weight-semibold: 600;
+    --ds-font-weight-bold: 700;
+
+    --ds-space-0: 0rem;
+    --ds-space-1: 0.4rem;
+    --ds-space-2: 0.8rem;
+    --ds-space-3: 1.2rem;
+    --ds-space-4: 1.6rem;
+    --ds-space-5: 2rem;
+    --ds-space-6: 2.4rem;
+    --ds-space-8: 3.2rem;
+    --ds-space-10: 4rem;
+    --ds-space-12: 4.8rem;
+    --ds-space-16: 6.4rem;
+
+    --ds-pad-2: calc(0.8rem * var(--ds-density-scale));
+    --ds-pad-3: calc(1.2rem * var(--ds-density-scale));
+    --ds-pad-4: calc(1.6rem * var(--ds-density-scale));
+
+    --ds-radius-0: 0;
+    --ds-radius-2: 0.2rem;
+    --ds-radius-4: 0.4rem;
+    --ds-radius-6: 0.6rem;
+    --ds-radius-8: 0.8rem;
+    --ds-radius-12: 1.2rem;
+
+    --ds-shadow-1: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.06), 0 0.1rem 0.1rem rgba(0, 0, 0, 0.04);
+    --ds-shadow-2: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.08), 0 0.2rem 0.2rem rgba(0, 0, 0, 0.06);
+    --ds-shadow-3: 0 0.6rem 1.6rem rgba(0, 0, 0, 0.12);
+
+    --ds-elevation-0: none;
+    --ds-elevation-1: var(--ds-shadow-1);
+    --ds-elevation-2: var(--ds-shadow-2);
+    --ds-elevation-3: var(--ds-shadow-3);
+
+    --ds-elevation-surface: var(--ds-elevation-0);
+    --ds-elevation-card: var(--ds-elevation-1);
+    --ds-elevation-popover: var(--ds-elevation-2);
+    --ds-elevation-modal: var(--ds-elevation-3);
+
+    --ds-z-base: 0;
+    --ds-z-sticky: 100;
+    --ds-z-dropdown: 1000;
+    --ds-z-modal: 10000;
+    --ds-z-toast: 11000;
+
+    --ds-motion-duration-1: 120ms;
+    --ds-motion-duration-2: 180ms;
+    --ds-motion-duration-3: 240ms;
+    --ds-motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+    --ds-focus-ring-action: 0 0 0 0.3rem color-mix(in srgb, var(--ds-accent) 35%, transparent);
+    --ds-focus-ring-field: 0 0 0 0.3rem color-mix(in srgb, var(--ds-outline-focus) 35%, transparent);
+
+    --ds-state-hover-bg: color-mix(in srgb, var(--ds-accent) 10%, transparent);
+    --ds-state-active-bg: color-mix(in srgb, var(--ds-accent) 20%, transparent);
+    --ds-state-disabled-opacity: 0.5;
+
+    --ds-opacity-muted: 0.7;
+    --ds-opacity-disabled: 0.5;
+    --ds-border-width-1: 0.1rem;
+    --ds-border-width-2: 0.2rem;
+    --ds-border-style: solid;
+  }
+}

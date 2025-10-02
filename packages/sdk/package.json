@@ -1,0 +1,44 @@
+{
+  "name": "@mdi/sdk",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Official SDK for the API (REST/GraphQL) — functional, fetch-based.",
+  "sideEffects": false,
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format esm,cjs",
+    "dev": "tsup src/index.ts --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@mdi/contracts": "workspace:*",
+    "@mdi/typescript-config": "workspace:*",
+    "axios": "^1.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tslib": "^2.8.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.0.5"
+  },
+  "license": "MIT"
+}

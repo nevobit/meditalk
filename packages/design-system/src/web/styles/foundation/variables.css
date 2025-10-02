@@ -1,0 +1,24 @@
+@layer foundation {
+  :root {
+    --ds-button-fg: var(--ds-accent-contrast);
+    --ds-button-bg: var(--ds-accent);
+    --ds-button-bg-hover: color-mix(in srgb, var(--ds-accent) 90%, black);
+    --ds-button-border: var(--ds-accent);
+
+    --ds-input-bg: var(--ds-bg-elevated);
+    --ds-input-fg: var(--ds-fg-default);
+    --ds-input-border: var(--ds-border-default);
+    --ds-input-border-focus: var(--ds-outline-focus);
+
+    --ds-card-bg: var(--ds-bg-elevated);
+    --ds-card-border: var(--ds-border-default);
+    --ds-card-shadow: var(--ds-elevation-card);
+
+    --ds-tooltip-bg: var(--ds-color-neutral-900);
+    --ds-tooltip-fg: var(--ds-color-neutral-0);
+
+    /* Shared focus tokens */
+    --ds-focus-ring: var(--ds-focus-ring-action);
+    --ds-focus-ring-field: var(--ds-focus-ring-field);
+  }
+}

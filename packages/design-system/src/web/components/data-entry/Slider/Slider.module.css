@@ -1,0 +1,66 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-2);
+  }
+  .fullWidth {
+    width: 100%;
+  }
+  .label {
+    font-size: var(--ds-font-size-14);
+    font-weight: var(--ds-font-weight-medium);
+  }
+
+  .control {
+    width: 100%;
+    appearance: none;
+    height: 0.4rem;
+    border-radius: var(--ds-radius-4);
+    background: var(--ds-border-default);
+  }
+
+  .control:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-focus-ring-field);
+  }
+
+  .control::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--ds-accent);
+    border: none;
+    box-shadow: var(--ds-shadow-1);
+    margin-top: -0.6rem;
+  }
+  .control::-webkit-slider-runnable-track {
+    height: 0.4rem;
+    border-radius: var(--ds-radius-4);
+  }
+
+  /* Firefox */
+  .control::-moz-range-thumb {
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--ds-accent);
+    border: none;
+    box-shadow: var(--ds-shadow-1);
+  }
+  .control::-moz-range-track {
+    height: 0.4rem;
+    border-radius: var(--ds-radius-4);
+    background: var(--ds-border-default);
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+  }
+  .hint {
+    color: var(--ds-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+}

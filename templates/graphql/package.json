@@ -1,0 +1,41 @@
+{
+  "name": "graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev -P tsconfig.json src/server/index.ts",
+    "build": "./scripts/build",
+    "start": "node ./dist/server/index.js",
+    "release": "release-it",
+    "docker-compose:up": "docker-compose -f docker-compose.yml up",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
+    "push": "drizzle-kit push:pg",
+    "setup-db": "node scripts/setup-database.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.0",
+  "dependencies": {
+    "@apollo/server": "catalog:",
+    "@as-integrations/fastify": "^3.0.0",
+    "@fastify/cors": "^11.1.0",
+    "@graphql-tools/schema": "^10.0.25",
+    "@mdi/business-logic": "workspace:*",
+    "@mdi/constant-definitions": "workspace:*",
+    "@mdi/contracts": "workspace:*",
+    "@mdi/core-modules": "workspace:*",
+    "@mdi/data-sources": "workspace:*",
+    "dotenv": "catalog:",
+    "fastify": "catalog:",
+    "graphql-ws": "^6.0.6",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/ws": "^8.18.1",
+    "typescript": "catalog:"
+  }
+}

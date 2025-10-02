@@ -1,0 +1,28 @@
+apiVersion: v2
+name: ecommerce-web
+description: Helm chart for the meditalk ecommerce-web application (Next.js SSR)
+
+type: application
+
+version: 0.1.0
+
+appVersion: '1.0.0'
+
+keywords:
+  - nextjs
+  - ecommerce
+  - web
+  - ssr
+
+home: https://meditalk.com
+sources:
+  - https://github.com/meditalk/meditalk
+
+maintainers:
+  - name: DevOps Team
+    email: devops@meditalk.com
+
+dependencies:
+  - name: common
+    version: 2.x.x
+    repository: https://charts.bitnami.com/bitnami

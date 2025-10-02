@@ -1,0 +1,36 @@
+{
+  "name": "@mdi/business-logic",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsup src/index.ts --dts --format esm,cjs --sourcemap --watch",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@mdi/constant-definitions": "workspace:*",
+    "@mdi/contracts": "workspace:*",
+    "@mdi/data-sources": "workspace:*",
+    "@mdi/integrations": "workspace:*",
+    "@mdi/security": "workspace:*",
+    "@mdi/typescript-config": "workspace:*",
+    "@types/node": "^24.3.0",
+    "tslib": "^2.8.1",
+    "typescript": "catalog:",
+    "vitest": "^2.1.1"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "form-data": "^4.0.0"
+  }
+}

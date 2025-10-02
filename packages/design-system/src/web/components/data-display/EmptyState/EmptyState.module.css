@@ -1,0 +1,23 @@
+@layer components {
+  .root {
+    text-align: center;
+    padding: var(--ds-space-8);
+    color: var(--ds-fg-muted);
+  }
+  .icon {
+    font-size: 4rem;
+    margin-bottom: var(--ds-space-4);
+  }
+  .title {
+    font-size: var(--ds-font-size-20);
+    margin-bottom: var(--ds-space-2);
+  }
+  .description {
+    font-size: var(--ds-font-size-14);
+    margin-bottom: var(--ds-space-4);
+  }
+  .actions {
+    display: inline-flex;
+    gap: var(--ds-space-3);
+  }
+}

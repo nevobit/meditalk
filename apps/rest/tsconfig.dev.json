@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@mdi/business-logic": ["../../packages/business-logic/src/index.ts"],
+      "@mdi/contracts": ["../../packages/contracts/src/index.ts"],
+      "@mdi/security": ["../../packages/security/src/index.ts"],
+      "@mdi/core-modules": ["../../packages/core-modules/src/index.ts"],
+      "@mdi/constant-definitions": ["../../packages/constant-definitions/src/index.ts"],
+      "@mdi/data-sources": ["../../packages/data-sources/src/index.ts"],
+      "@mdi/integrations": ["../../packages/integrations/src/index.ts"]
+    }
+  }
+}

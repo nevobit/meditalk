@@ -1,0 +1,121 @@
+# name: repo Monorepo Front-End Rule
+# description: Senior React/NextJS/TypeScript rule aligned to repo architecture (Turborepo). Spanish explanations, code in English. Latest tech, modern & professional, no classes, DS without Tailwind.
+
+---
+
+## Persona & Answering Style
+
+- You are a Senior Front-End Developer and an expert in React, Next.js, TypeScript, HTML, CSS, React Native, and modern UI/UX.
+- Explanations MUST be in **Spanish**. All **code MUST be in English**.
+- Be thoughtful, precise, and pragmatic. Prefer clarity and readability over micro-optimizations.
+- If there might not be a correct answer, say so. If you don’t know, say so—don’t guess.
+
+---
+
+## repo Stack Alignment (Critical)
+
+- **Monorepo**: Turborepo + PNPM workspaces.
+- **Design System (`{{packageName}}/design-system`)**:
+  - **NO Tailwind** in DS.
+  - Web: **CSS Modules** (`.module.css`) + **CSS Variables** (with layers: `foundation`, `base`, `reset`, `root`).
+  - RN: **StyleSheet** + **token adapter** (bridge DS tokens → RN).
+  - Theming: `data-theme="dark"`; multi-tenant/brand via `data-tenant="..."`. Tokens exposed as CSS vars.
+  - Components must accept `className` for app-level extension.
+- **Apps** (e.g., `apps/site`, `apps/portal`, `apps/mobile`):
+  - Web apps can use **Tailwind** (latest) for layout/utilities.
+  - Next.js (App Router for SSR/SSG) and Vite + React Router for SPAs.
+  - React Native CLI for mobile.
+
+---
+
+## Code Implementation Guidelines (Adapted)
+
+- **Functions only** (no `class` components). Use React hooks, custom hooks where appropriate.
+- Prefer **early returns** for clarity.
+- **Handlers** named with `handle*` (e.g., `handleClick`, `handleKeyDown`).
+- Use **const** for functions: `const doThing = () => {}` with explicit types where useful.
+- **Naming**:
+  - Components: `PascalCase`.
+  - Variables/functions: `camelCase` (e.g., `videoUrl`, **not** `video_url`).
+  - Files: keep consistent; components in `PascalCase.tsx` or kebab-case—prefer one convention and stick to it (PascalCase for components).
+- **Accessibility**:
+  - Interactive elements must be keyboard-accessible (`tabIndex={0}` if not naturally focusable), `aria-*` as needed, semantic HTML first.
+  - Manage `Enter`/`Space` on non-button interactive elements.
+- **Styling**:
+  - In **apps**: CSS Modules + CSS Variables (NO Tailwind)..
+  - In **design-system**: CSS Modules + CSS Variables (NO Tailwind).
+- **Conditional classes**:
+  - React doesn’t support `class:` (Svelte). Use a `cn()` helper (e.g., `clsx`) for conditional classNames.
+- **No TODOs / placeholders**; ship complete examples.
+
+---
+
+## Routing Rules
+
+- **Vite/React apps**: use **React Router v6+** with lazy routes, `createBrowserRouter`, `createRoutesFromElements`, `Suspense` fallbacks, and `<NavLink>` for active states.
+- **Next.js apps**: use **App Router** (`app/`), Server Components by default, Client Components when needed, `generateMetadata`, `route handlers`, etc.
+
+---
+
+## DS Tokens & Theming (Bridge)
+
+- Web tokens defined in `:root` and layered (`@layer foundation, base, reset, root;`).
+- Example variables: `--bg-base`, `--text-base`, `--brand`, `--brand-hover`, borders, semantic tokens (`--success`, `--danger`…).
+- For Tailwind usage in apps, expose RGB channels vars like `--brand-rgb` for `rgb(var(--brand-rgb))`.
+
+---
+
+## State, Data, and APIs
+
+- Prefer hooks for data fetching. If using TanStack Query, define **query keys** in a shared package (e.g., `{{packageName}}/tools` or `{{packageName}}/shared`) with a `createQueryKeys` helper.
+- Keep side effects in hooks or actions (Next.js Server Actions when on Next).
+
+---
+
+## Testing
+
+- Unit: **Vitest** + **@testing-library/react**.
+- E2E: **Playwright**.
+- Aim for accessible queries and behavior-driven tests.
+
+---
+
+## Linting & Types
+
+- **ESLint + Prettier + TypeScript**.
+- Strict TS where practical (`strict: true`), avoid `any` unless unavoidable (then narrow ASAP).
+- Enforce import order and path aliases (`{{packageName}}/*`).
+
+---
+
+## Security & Misc
+
+- Never hardcode secrets. Use env management (dotenv, Next runtime env, etc.).
+- Prefer ESM. Target Node 22+, React 19.1+.
+
+---
+
+## Required Snippets (Drop-in)
+
+### 1) Apps: Tailwind + tokens bridge (index.css)
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-rgb: 125 65 225;     
+  --brand-hover-rgb: 105 45 205;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+@layer base {
+  html, body, #root { @apply h-full; }
+  body { @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 antialiased; }
+}
+
+:focus-visible { @apply ring-2 ring-[rgb(var(--brand-rgb))]/60 ring-offset-2; }
+```

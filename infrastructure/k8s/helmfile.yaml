@@ -1,0 +1,45 @@
+repositories:
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+releases:
+  - name: cert-manager
+    namespace: cert-manager
+    createNamespace: true
+    chart: jetstack/cert-manager
+    version: v1.15.1
+    values: ['./base/cert-manager/values.yaml']
+  - name: ingress-nginx
+    namespace: ingress-nginx
+    createNamespace: true
+    chart: ingress-nginx/ingress-nginx
+    version: 4.11.2
+    values: ['./base/ingress-nginx/values.yaml']
+  - name: external-dns
+    namespace: external-dns
+    createNamespace: true
+    chart: bitnami/external-dns
+    version: 8.6.0
+    values: ['./base/external-dns/values.yaml']
+  - name: kube-prometheus-stack
+    namespace: observability
+    createNamespace: true
+    chart: prometheus-community/kube-prometheus-stack
+    version: 62.6.0
+    values: ['./base/kube-prometheus-stack/values.yaml']
+  - name: loki
+    namespace: observability
+    createNamespace: true
+    chart: grafana/loki-stack
+    version: 2.10.2
+    values: ['./base/loki-stack/values.yaml']
+  - name: cluster-autoscaler
+    namespace: kube-system
+    chart: autoscaler/cluster-autoscaler
+    # o usa manifiestos oficiales + SA/IAM Role

@@ -1,0 +1,40 @@
+.stack {
+  position: fixed;
+  z-index: var(--ds-z-index-4);
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  pointer-events: none;
+}
+.top-right {
+  top: 0;
+  right: 0;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.bottom-right {
+  bottom: 0;
+  right: 0;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.top-left {
+  top: 0;
+  left: 0;
+  flex-direction: column;
+}
+.bottom-left {
+  bottom: 0;
+  left: 0;
+  flex-direction: column;
+}
+
+.toast {
+  pointer-events: auto;
+  background: var(--ds-color-bg-elevated);
+  color: var(--ds-color-fg-default);
+  border: 1px solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-6);
+  padding: 10px 12px;
+  box-shadow: var(--ds-shadow-2);
+}

@@ -1,0 +1,189 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    ":semanticCommitScope(deps)"
+  ],
+  "schedule": ["before 4am on monday"],
+  "timezone": "America/New_York",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch"
+    },
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "groupName": "all TypeScript types",
+      "groupSlug": "typescript-types"
+    },
+    {
+      "matchPackagePatterns": ["^eslint"],
+      "groupName": "all ESLint packages",
+      "groupSlug": "eslint-packages"
+    },
+    {
+      "matchPackagePatterns": ["^@babel/"],
+      "groupName": "all Babel packages",
+      "groupSlug": "babel-packages"
+    },
+    {
+      "matchPackagePatterns": ["^@testing-library/"],
+      "groupName": "all Testing Library packages",
+      "groupSlug": "testing-library-packages"
+    },
+    {
+      "matchPackagePatterns": ["^@next/"],
+      "groupName": "all Next.js packages",
+      "groupSlug": "nextjs-packages"
+    },
+    {
+      "matchPackagePatterns": ["^react", "^@types/react"],
+      "groupName": "all React packages",
+      "groupSlug": "react-packages"
+    },
+    {
+      "matchPackagePatterns": ["^@turbo/"],
+      "groupName": "all Turborepo packages",
+      "groupSlug": "turborepo-packages"
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["node"],
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["^@mdi/"],
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["^@mdi/"],
+      "enabled": false
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": false,
+      "prHourlyLimit": 2
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": false,
+      "prHourlyLimit": 1
+    },
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["prettier"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["eslint"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["@typescript-eslint/eslint-plugin", "@typescript-eslint/parser"],
+      "automerge": true
+    }
+  ],
+  "assignees": ["@mdi/engineering"],
+  "reviewers": ["@mdi/engineering"],
+  "labels": ["dependencies", "renovate"],
+  "commitMessageAction": "Update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "commitMessageSuffix": "",
+  "commitMessagePrefix": "",
+  "commitMessage": "{{commitMessagePrefix}}{{commitMessageAction}} {{commitMessageTopic}}{{commitMessageExtra}}{{commitMessageSuffix}}",
+  "prTitle": "{{commitMessageAction}} {{commitMessageTopic}}{{commitMessageExtra}}",
+  "prBodyTemplate": "## Changes\n\nThis PR updates {{depName}} from {{currentVersion}} to {{newVersion}}.\n\n## Type of Change\n\n- [ ] Bug fix (non-breaking change which fixes an issue)\n- [ ] New feature (non-breaking change which adds functionality)\n- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)\n- [ ] Documentation update\n\n## Testing\n\n- [ ] All tests pass\n- [ ] No breaking changes detected\n- [ ] Manual testing completed\n\n## Additional Notes\n\n{{#if hasReleaseNotes}}\n### Release Notes\n\n{{releaseNotes}}\n{{/if}}\n\n{{#if hasReleaseNotes}}\n### Changelog\n\n{{changelog}}\n{{/if}}",
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 5,
+  "branchConcurrentLimit": 20,
+  "baseBranches": ["main", "develop"],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/docs/**",
+    "**/test/**",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/coverage/**",
+    "**/.nyc_output/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.next/**",
+    "**/.turbo/**"
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"],
+    "assignees": ["@mdi/security"],
+    "reviewers": ["@mdi/security"],
+    "labels": ["security", "vulnerability", "renovate"],
+    "commitMessageAction": "Fix",
+    "commitMessageTopic": "{{depName}}",
+    "commitMessageExtra": "vulnerability",
+    "prTitle": "Fix {{depName}} vulnerability",
+    "prBodyTemplate": "## Security Vulnerability\n\nThis PR fixes a security vulnerability in {{depName}}.\n\n### Vulnerability Details\n\n- **Package**: {{depName}}\n- **Current Version**: {{currentVersion}}\n- **Fixed Version**: {{newVersion}}\n- **Severity**: {{#if vulnerability.severity}}{{vulnerability.severity}}{{else}}Unknown{{/if}}\n\n{{#if vulnerability.description}}\n### Description\n\n{{vulnerability.description}}\n{{/if}}\n\n{{#if vulnerability.cvssScore}}\n### CVSS Score\n\n{{vulnerability.cvssScore}}\n{{/if}}\n\n{{#if vulnerability.cwe}}\n### CWE\n\n{{vulnerability.cwe}}\n{{/if}}\n\n## Testing\n\n- [ ] All tests pass\n- [ ] Vulnerability scan passes\n- [ ] Manual testing completed\n\n## Additional Notes\n\nThis is an automated security fix. Please review and merge as soon as possible."
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 4am on sunday"],
+    "commitMessageAction": "Update",
+    "commitMessageTopic": "lock files",
+    "prTitle": "Update lock files"
+  },
+  "rangeStrategy": "auto",
+  "recreateClosed": false,
+  "rebaseWhen": "auto",
+  "rebaseLabel": "rebase",
+  "platformAutomerge": true,
+  "gitSubmodules": {
+    "enabled": true
+  },
+  "hostRules": [
+    {
+      "hostType": "github",
+      "token": "{{ secrets.GITHUB_TOKEN }}"
+    },
+    {
+      "hostType": "npm",
+      "token": "{{ secrets.NPM_TOKEN }}"
+    }
+  ],
+  "onboarding": true,
+  "requireConfig": false,
+  "configWarningReuseIssue": false,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🤖 Dependency Dashboard",
+  "dependencyDashboardLabels": ["dependencies", "dashboard"],
+  "dependencyDashboardOSVVulnerabilitySummary": true,
+  "osvVulnerabilitySummary": true,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@mdi/"],
+      "enabled": false,
+      "description": "Disable updates for internal packages"
+    }
+  ]
+}

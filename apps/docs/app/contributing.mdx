@@ -1,0 +1,398 @@
+# Contributing
+
+Thank you for your interest in contributing to the repo platform! This guide will help you get started with contributing to our project.
+
+## How to Contribute
+
+We welcome contributions from the community. Here are the main ways you can contribute:
+
+### 🐛 Bug Reports
+
+Found a bug? Please report it by creating an issue with:
+
+- **Clear description** of the problem
+- **Steps to reproduce** the issue
+- **Expected vs actual behavior**
+- **Environment details** (OS, browser, version)
+- **Screenshots or logs** if applicable
+
+### 💡 Feature Requests
+
+Have an idea for a new feature? Create an issue with:
+
+- **Clear description** of the feature
+- **Use case** and benefits
+- **Mockups or examples** if applicable
+- **Implementation suggestions** if you have any
+
+### 📝 Documentation
+
+Help improve our documentation by:
+
+- **Fixing typos** and grammar errors
+- **Adding missing information**
+- **Improving clarity** and examples
+- **Translating** to other languages
+
+### 🔧 Code Contributions
+
+Want to contribute code? Follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch
+3. **Make** your changes
+4. **Test** your changes
+5. **Submit** a pull request
+
+## Development Setup
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm 8+
+- Git
+- Docker (for local development)
+
+### Getting Started
+
+```bash
+# Fork and clone the repository
+git clone https://github.com/YOUR_USERNAME/repo.git
+cd repo
+
+# Install dependencies
+pnpm install
+
+# Set up environment
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start development servers
+pnpm dev
+```
+
+### Project Structure
+
+```
+repo/
+├── apps/                 # Applications
+│   ├── portal/          # Main web application
+│   ├── mobile/          # React Native mobile app
+│   ├── site/            # Marketing website
+│   ├── graphql/         # GraphQL API server
+│   └── rest/            # REST API server
+├── packages/            # Shared packages
+│   ├── design-system/   # UI component library
+│   ├── sdk/            # Client SDK
+│   ├── business-logic/  # Core business rules
+│   └── ...             # Other shared packages
+└── docs/               # Documentation
+```
+
+## Coding Standards
+
+### Code Style
+
+We use ESLint and Prettier for consistent code formatting:
+
+```bash
+# Check code style
+pnpm lint
+
+# Fix code style issues
+pnpm lint:fix
+
+# Format code
+pnpm format
+```
+
+### TypeScript
+
+- Use **strict mode** TypeScript
+- Provide **type annotations** for function parameters and return values
+- Use **interfaces** for object shapes
+- Avoid **any** type when possible
+
+### Naming Conventions
+
+- **Files**: kebab-case (`user-profile.tsx`)
+- **Components**: PascalCase (`UserProfile`)
+- **Functions**: camelCase (`getUserData`)
+- **Constants**: UPPER_SNAKE_CASE (`API_BASE_URL`)
+- **CSS Classes**: camelCase (`userProfile`)
+
+### Commit Messages
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+```
+type(scope): description
+
+feat(auth): add OAuth2 authentication
+fix(api): resolve user creation bug
+docs(readme): update installation instructions
+style(components): format code with prettier
+refactor(utils): simplify date formatting
+test(api): add user endpoint tests
+chore(deps): update dependencies
+```
+
+### Pull Request Guidelines
+
+#### Before Submitting
+
+1. **Test** your changes thoroughly
+2. **Update** documentation if needed
+3. **Add tests** for new functionality
+4. **Ensure** all tests pass
+5. **Check** code style and formatting
+
+#### Pull Request Template
+
+```markdown
+## Description
+
+Brief description of changes
+
+## Type of Change
+
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Testing
+
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed
+
+## Checklist
+
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] Tests added/updated
+```
+
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Run specific test suites
+pnpm test:unit
+pnpm test:integration
+pnpm test:e2e
+```
+
+### Writing Tests
+
+#### Unit Tests
+
+```typescript
+import { describe, it, expect } from 'vitest';
+import { formatDate } from '../utils/date';
+
+describe('formatDate', () => {
+  it('formats date correctly', () => {
+    const date = new Date('2024-01-01');
+    expect(formatDate(date)).toBe('Jan 1, 2024');
+  });
+
+  it('handles invalid date', () => {
+    expect(formatDate(null)).toBe('Invalid date');
+  });
+});
+```
+
+#### Component Tests
+
+```typescript
+import { render, screen, fireEvent } from '@testing-library/react';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('renders with correct text', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+  });
+
+  it('handles click events', () => {
+    const handleClick = vi.fn();
+    render(<Button onClick={handleClick}>Click me</Button>);
+
+    fireEvent.click(screen.getByText('Click me'));
+    expect(handleClick).toHaveBeenCalled();
+  });
+});
+```
+
+#### Integration Tests
+
+```typescript
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { setupTestDatabase, teardownTestDatabase } from './test-utils';
+
+describe('User API', () => {
+  beforeAll(async () => {
+    await setupTestDatabase();
+  });
+
+  afterAll(async () => {
+    await teardownTestDatabase();
+  });
+
+  it('creates a new user', async () => {
+    const response = await request(app)
+      .post('/api/users')
+      .send({ name: 'John Doe', email: 'john@example.com' });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+  });
+});
+```
+
+## Documentation
+
+### Writing Documentation
+
+- **Be clear** and concise
+- **Include examples** for complex concepts
+- **Use proper markdown** formatting
+- **Add code snippets** where helpful
+- **Keep it up to date** with code changes
+
+### Documentation Structure
+
+```
+docs/
+├── getting-started/     # Getting started guides
+├── architecture/        # System architecture
+├── api/                # API documentation
+├── components/         # Component documentation
+└── guides/            # How-to guides
+```
+
+### Code Comments
+
+```typescript
+/**
+ * Formats a date according to the user's locale
+ * @param date - The date to format
+ * @param locale - The locale to use (defaults to 'en-US')
+ * @returns Formatted date string
+ */
+export function formatDate(date: Date, locale = 'en-US'): string {
+  return date.toLocaleDateString(locale);
+}
+```
+
+## Review Process
+
+### Code Review Guidelines
+
+1. **Be respectful** and constructive
+2. **Focus on the code**, not the person
+3. **Ask questions** if something is unclear
+4. **Suggest improvements** when possible
+5. **Approve** when satisfied
+
+### Review Checklist
+
+- [ ] Code follows style guidelines
+- [ ] Tests are included and pass
+- [ ] Documentation is updated
+- [ ] No security vulnerabilities
+- [ ] Performance considerations addressed
+- [ ] Accessibility requirements met
+
+## Release Process
+
+### Versioning
+
+We follow [Semantic Versioning](https://semver.org/):
+
+- **Major** (1.0.0): Breaking changes
+- **Minor** (1.1.0): New features, backward compatible
+- **Patch** (1.1.1): Bug fixes, backward compatible
+
+### Release Steps
+
+1. **Create** release branch from main
+2. **Update** version numbers
+3. **Update** changelog
+4. **Run** full test suite
+5. **Create** release tag
+6. **Deploy** to staging
+7. **Deploy** to production
+8. **Announce** release
+
+## Community Guidelines
+
+### Code of Conduct
+
+We are committed to providing a welcoming and inclusive environment for all contributors. Please:
+
+- **Be respectful** of others
+- **Be inclusive** and welcoming
+- **Be collaborative** and helpful
+- **Be constructive** in feedback
+- **Be patient** with newcomers
+
+### Communication
+
+- **GitHub Issues**: For bug reports and feature requests
+- **GitHub Discussions**: For questions and general discussion
+- **Pull Requests**: For code contributions
+- **Email**: For security issues (security{{packageName}}.com)
+
+## Getting Help
+
+### Resources
+
+- **[Getting Started](./getting-started)** - Setup guide
+- **[Architecture Overview](./architecture/overview)** - System design
+- **[API Documentation](./api/graphql)** - API reference
+- **[Design System](./design-system/page)** - Component library
+
+### Support Channels
+
+- **GitHub Issues**: Technical problems
+- **GitHub Discussions**: Questions and ideas
+- **Documentation**: Self-service help
+- **Team**: Direct contact for urgent issues
+
+## Recognition
+
+### Contributors
+
+We recognize contributors in several ways:
+
+- **Contributors list** on GitHub
+- **Release notes** for significant contributions
+- **Blog posts** for major features
+- **Conference talks** for interesting work
+
+### Hall of Fame
+
+Special recognition for:
+
+- **First-time contributors**
+- **Major feature contributors**
+- **Long-term maintainers**
+- **Documentation champions**
+
+---
+
+Thank you for contributing to repo! Your contributions help make our platform better for everyone. 🚀

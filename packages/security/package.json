@@ -1,0 +1,45 @@
+{
+  "name": "@mdi/security",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "module": "./src/index.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup src/index.ts --dts --format esm,cjs --sourcemap --watch --tsconfig tsconfig.dev.json",
+    "build": "tsup src/index.ts --dts --format esm,cjs --sourcemap --tsconfig tsconfig.build.json",
+    "type-check": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.0",
+  "dependencies": {
+    "@aws-sdk/client-kms": "^3.876.0",
+    "@mdi/typescript-config": "workspace:*",
+    "argon2": "^0.44.0",
+    "crypto": "^1.0.1",
+    "ioredis": "^5.7.0",
+    "jose": "^6.0.13",
+    "jsonwebtoken": "^9.0.2",
+    "otplib": "^12.0.1"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.3.0",
+    "tslib": "^2.8.1",
+    "tsup": "^8.0.1",
+    "typescript": "catalog:"
+  }
+}

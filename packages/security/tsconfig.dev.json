@@ -1,0 +1,5 @@
+{
+  "extends": "@mdi/typescript-config/dev.json",
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}

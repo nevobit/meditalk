@@ -1,0 +1,155 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-2);
+    width: auto;
+    color: var(--ds-fg-default);
+  }
+
+  .fullWidth {
+    width: 100%;
+  }
+
+  .label {
+    font-size: var(--ds-font-size-14);
+    font-weight: var(--ds-font-weight-light);
+    color: var(--ds-color-fg-default);
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--ds-input-bg);
+    border: var(--ds-border-width-1) var(--ds-border-style) var(--ds-input-border);
+    border-radius: var(--ds-radius-12);
+    transition:
+      box-shadow var(--ds-motion-duration-2) var(--ds-motion-ease-standard),
+      border-color var(--ds-motion-duration-2) var(--ds-motion-ease-standard),
+      background var(--ds-motion-duration-2) var(--ds-motion-ease-standard);
+    min-height: 3.6rem;
+  }
+
+  .affix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--ds-space-2);
+    color: var(--ds-color-fg-muted);
+    gap: var(--ds-space-1);
+    margin-left: auto;
+  }
+
+  .action {
+    border: none;
+    background: transparent;
+    color: var(--ds-color-fg-muted);
+    cursor: pointer;
+    padding-inline: var(--ds-space-3);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: max-content;
+    margin-left: auto;
+  }
+
+  .action:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-focus-ring-action);
+  }
+
+  .clear:hover,
+  .password:hover {
+    color: var(--ds-accent);
+  }
+
+  .control {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--ds-input-fg);
+    padding-block: var(--ds-pad-2);
+    padding-inline: var(--ds-pad-2);
+    font-size: var(--ds-font-size-16);
+    line-height: var(--ds-line-height-normal);
+    min-width: 0;
+  }
+
+  .control::placeholder {
+    color: color-mix(in srgb, var(--ds-input-fg) 60%, transparent);
+  }
+
+  .control:focus {
+    outline: none;
+  }
+  .field:focus-within {
+    border-color: var(--ds-input-border-focus);
+    box-shadow: var(--ds-focus-ring-field);
+  }
+
+  /* Sizes */
+  .sm .control {
+    font-size: var(--ds-font-size-14);
+    padding-block: calc(var(--ds-pad-2) * 0.85);
+  }
+  .md .control {
+    font-size: var(--ds-font-size-16);
+  }
+  .lg .control {
+    font-size: var(--ds-font-size-18);
+    padding-block: calc(var(--ds-pad-2) * 1.15);
+  }
+
+  .sm .affix,
+  .sm .action {
+    padding-inline: calc(var(--ds-space-2));
+  }
+  .lg .affix,
+  .lg .action {
+    padding-inline: calc(var(--ds-space-3) + 0.2rem);
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+    line-height: var(--ds-line-height-normal);
+  }
+  .hint {
+    color: var(--ds-color-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+  .success {
+    color: var(--ds-success);
+  }
+
+  .error .field {
+    border-color: var(--ds-danger);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--ds-danger) 25%, transparent);
+  }
+
+  .success .field {
+    border-color: var(--ds-success);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--ds-success) 20%, transparent);
+  }
+
+  .disabled .field {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+  .disabled .control {
+    cursor: not-allowed;
+  }
+  .readOnly .control {
+    cursor: default;
+  }
+
+  .legacyCheckbox .field {
+    max-width: 5rem;
+    grid-template-columns: 1fr; /* no affixes */
+    background: transparent;
+    border: none;
+  }
+}

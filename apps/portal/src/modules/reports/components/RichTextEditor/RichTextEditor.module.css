@@ -1,0 +1,275 @@
+.editor {
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 12px;
+  flex-wrap: nowrap;
+  min-height: 36px;
+  overflow-x: auto;
+  justify-content: space-between;
+}
+
+.toolbarStatus {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4b5563;
+  transition: all 0.15s ease;
+  user-select: none;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.menuButton:hover:not(.disabled) {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.menuButton.active {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.menuButton.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.statusIndicator {
+  font-size: 10px;
+  color: #16a34a;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f0fdf4;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid #bbf7d0;
+  white-space: nowrap;
+}
+
+.editorWrapper {
+  position: relative;
+  min-height: 300px;
+}
+
+.editorContent {
+  padding: 24px;
+  min-height: 400px;
+  outline: none;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #111827;
+  background: white;
+}
+
+.editorContent h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.editorContent h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 24px 0 16px 0;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.editorContent h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 12px 0;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.editorContent p {
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}
+
+.editorContent ul,
+.editorContent ol {
+  margin: 0 0 16px 0;
+  padding-left: 28px;
+}
+
+.editorContent li {
+  margin: 0 0 6px 0;
+  line-height: 1.6;
+}
+
+.editorContent blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 16px;
+  margin: 0 0 12px 0;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.editorContent code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+.editorContent pre {
+  background: #f3f4f6;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 0 0 12px 0;
+  overflow-x: auto;
+  font-family:
+    'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.editorContent pre code {
+  background: none;
+  padding: 0;
+  color: #111827;
+}
+
+.editorContent a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.editorContent a:hover {
+  color: #1d4ed8;
+}
+
+.editorContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+.editorContent .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Task List Styles */
+.editorContent ul[data-type='taskList'] {
+  list-style: none;
+  padding: 0;
+}
+
+.editorContent ul[data-type='taskList'] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.editorContent ul[data-type='taskList'] li > label {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  user-select: none;
+}
+
+.editorContent ul[data-type='taskList'] li > div {
+  flex: 1 1 auto;
+}
+
+.editorContent ul[data-type='taskList'] input[type='checkbox'] {
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 4px 8px;
+    gap: 1px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+  }
+
+  .menuButton {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+    margin: 0;
+  }
+
+  .editorContent {
+    padding: 16px;
+    font-size: 13px;
+    min-height: 300px;
+  }
+
+  .editorContent h1 {
+    font-size: 22px;
+  }
+
+  .editorContent h2 {
+    font-size: 18px;
+  }
+
+  .editorContent h3 {
+    font-size: 16px;
+  }
+
+  .statusIndicator {
+    font-size: 9px;
+    padding: 1px 3px;
+  }
+}
+
+/* Focus States */
+.editor:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Selection Styles */
+.editorContent ::selection {
+  background: rgba(37, 99, 235, 0.2);
+}
+
+/* Placeholder Styles */
+.editorContent .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}

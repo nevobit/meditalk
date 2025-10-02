@@ -1,0 +1,79 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-2);
+    width: auto;
+  }
+
+  .fullWidth {
+    width: 100%;
+  }
+
+  .label {
+    font-size: var(--ds-font-size-14);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-fg-default);
+  }
+
+  .control {
+    width: 100%;
+    min-height: 8rem;
+    padding: var(--ds-pad-2) var(--ds-pad-3);
+    border: var(--ds-border-width-1) solid var(--ds-input-border);
+    border-radius: var(--ds-radius-6);
+    background: var(--ds-input-bg);
+    color: var(--ds-input-fg);
+    font-size: var(--ds-font-size-16);
+    line-height: var(--ds-line-height-normal);
+    resize: vertical;
+    transition:
+      border-color var(--ds-motion-duration-2),
+      box-shadow var(--ds-motion-duration-2);
+  }
+
+  .control::placeholder {
+    color: color-mix(in srgb, var(--ds-input-fg) 60%, transparent);
+  }
+
+  .control:focus {
+    outline: none;
+  }
+  .control:focus-visible {
+    border-color: var(--ds-input-border-focus);
+    box-shadow: var(--ds-focus-ring-field);
+  }
+
+  .sm .control {
+    font-size: var(--ds-font-size-14);
+    min-height: 6rem;
+  }
+  .lg .control {
+    font-size: var(--ds-font-size-18);
+    min-height: 10rem;
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+  }
+  .hint {
+    color: var(--ds-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+  .success {
+    color: var(--ds-success);
+  }
+
+  .error .control {
+    border-color: var(--ds-danger);
+  }
+  .success .control {
+    border-color: var(--ds-success);
+  }
+
+  .disabled .control {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+}

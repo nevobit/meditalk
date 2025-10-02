@@ -1,0 +1,69 @@
+@layer components {
+  .root {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--ds-space-2);
+  }
+  .disabled {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+
+  .control {
+    --w: 3.6rem;
+    --h: 2rem;
+    width: var(--w);
+    height: var(--h);
+    border-radius: var(--h);
+    background: var(--ds-border-default);
+    border: var(--ds-border-width-1) solid var(--ds-border-default);
+    position: relative;
+    cursor: pointer;
+    transition:
+      background var(--ds-motion-duration-2),
+      border-color var(--ds-motion-duration-2);
+  }
+  .control:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-focus-ring-action);
+  }
+
+  .thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.2rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--ds-bg-elevated);
+    transform: translate(0, -50%);
+    transition: transform var(--ds-motion-duration-2);
+    box-shadow: var(--ds-shadow-1);
+  }
+
+  .on {
+    background: var(--ds-accent);
+    border-color: var(--ds-accent);
+  }
+  .on .thumb {
+    transform: translate(calc(var(--w) - 1.6rem), -50%);
+  }
+
+  .label {
+    font-size: var(--ds-font-size-14);
+  }
+  .hint {
+    font-size: var(--ds-font-size-12);
+    color: var(--ds-fg-muted);
+  }
+
+  .sm .control {
+    --w: 3.2rem;
+    --h: 1.8rem;
+  }
+  .lg .control {
+    --w: 4rem;
+    --h: 2.2rem;
+  }
+}

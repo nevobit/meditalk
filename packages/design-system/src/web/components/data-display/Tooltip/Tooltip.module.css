@@ -1,0 +1,20 @@
+@layer components {
+  .wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: var(--ds-space-2);
+    background: var(--ds-bg-inverse);
+    color: var(--ds-fg-inverse);
+    padding: var(--ds-space-1) var(--ds-space-2);
+    border-radius: var(--ds-radius-4);
+    font-size: var(--ds-font-size-12);
+    white-space: nowrap;
+    z-index: var(--ds-z-tooltip);
+  }
+}

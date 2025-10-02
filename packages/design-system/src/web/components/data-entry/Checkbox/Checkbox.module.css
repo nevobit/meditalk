@@ -1,0 +1,90 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-1);
+    color: var(--ds-fg-default);
+  }
+  .disabled {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+  .controlRow {
+    display: inline-grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: var(--ds-space-2);
+  }
+
+  .input {
+    appearance: none;
+    margin: 0;
+    width: 1.8rem;
+    height: 1.8rem;
+    position: relative;
+    border-radius: var(--ds-radius-4);
+    border: var(--ds-border-width-1) solid var(--ds-border-default);
+    background: var(--ds-bg-elevated);
+    cursor: pointer;
+  }
+  .input:focus-visible {
+    outline: none;
+    box-shadow: var(--ds-focus-ring-field);
+    border-color: var(--ds-input-border-focus);
+  }
+  .input:checked {
+    border-color: var(--ds-accent);
+    background: var(--ds-accent);
+  }
+
+  .box {
+    pointer-events: none;
+    position: absolute;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: inline-grid;
+    place-items: center;
+    color: var(--ds-accent-contrast);
+  }
+  .icon {
+    opacity: 0;
+    transition: opacity var(--ds-motion-duration-2);
+  }
+  .iconInd {
+    opacity: 0;
+    transition: opacity var(--ds-motion-duration-2);
+  }
+
+  /* Show check when checked */
+  .input:checked + .box .icon {
+    opacity: 1;
+  }
+
+  /* Show indeterminate when :indeterminate (we set via JS) */
+  .input:indeterminate + .box .iconInd {
+    opacity: 1;
+  }
+
+  .label {
+    font-size: var(--ds-font-size-14);
+    cursor: pointer;
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+  }
+  .hint {
+    color: var(--ds-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+
+  .sm .input {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  .lg .input {
+    width: 2rem;
+    height: 2rem;
+  }
+}

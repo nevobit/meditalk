@@ -1,0 +1,81 @@
+@layer components {
+  .root {
+    display: grid;
+    gap: var(--ds-space-2);
+    width: auto;
+  }
+
+  .fullWidth {
+    width: 100%;
+  }
+
+  .label {
+    font-size: var(--ds-font-size-14);
+    font-weight: var(--ds-font-weight-medium);
+    color: var(--ds-color-fg-default);
+  }
+
+  .field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: var(--ds-border-width-1) solid var(--ds-input-border);
+    border-radius: var(--ds-radius-6);
+    background: var(--ds-input-bg);
+    transition:
+      border-color var(--ds-motion-duration-2),
+      box-shadow var(--ds-motion-duration-2);
+  }
+
+  .icon {
+    margin-left: 1rem;
+    color: var(--ds-fg-muted);
+    pointer-events: none;
+  }
+
+  .control {
+    appearance: none;
+    width: 100%;
+    padding-block: var(--ds-pad-2);
+    padding-inline: var(--ds-pad-3);
+    font-size: var(--ds-font-size-16);
+    border: none;
+    background: transparent;
+    color: var(--ds-input-fg);
+  }
+
+  .control:focus {
+    outline: none;
+  }
+  .control:focus-visible {
+    border-color: var(--ds-input-border-focus);
+    box-shadow: var(--ds-focus-ring-field);
+  }
+
+  .sm .control {
+    font-size: var(--ds-font-size-14);
+    padding-block: calc(var(--ds-pad-2) * 0.85);
+  }
+  .lg .control {
+    font-size: var(--ds-font-size-18);
+    padding-block: calc(var(--ds-pad-2) * 1.15);
+  }
+
+  .message {
+    font-size: var(--ds-font-size-12);
+  }
+  .hint {
+    color: var(--ds-fg-muted);
+  }
+  .error {
+    color: var(--ds-danger);
+  }
+  .success {
+    color: var(--ds-success);
+  }
+
+  .disabled .field {
+    opacity: var(--ds-opacity-disabled);
+    cursor: not-allowed;
+  }
+}

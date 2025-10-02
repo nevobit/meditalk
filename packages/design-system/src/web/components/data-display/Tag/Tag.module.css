@@ -1,0 +1,24 @@
+@layer components {
+  .root {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 var(--ds-space-2);
+    font-size: var(--ds-font-size-12);
+    border-radius: var(--ds-radius-4);
+    line-height: 1.6;
+    background: var(--ds-bg-subtle);
+    color: var(--ds-fg-muted);
+  }
+  .success {
+    background: var(--ds-success);
+    color: var(--ds-success-fg);
+  }
+  .warning {
+    background: var(--ds-warning);
+    color: var(--ds-warning-fg);
+  }
+  .danger {
+    background: var(--ds-danger);
+    color: var(--ds-danger-fg);
+  }
+}

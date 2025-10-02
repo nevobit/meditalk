@@ -1,0 +1,126 @@
+@layer foundation, tokens;
+@layer tokens {
+  .tk-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tk-table th,
+  .tk-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--ds-color-divider, #eef0f3);
+    vertical-align: middle;
+  }
+  .tk-table th {
+    text-align: left;
+    font-weight: 600;
+    background: color-mix(in oklab, var(--ds-color-bg, #fff) 96%, black);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .tk-preview {
+    width: 44px;
+    height: 28px;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+    border-radius: 0.5rem;
+    background: var(--ds-color-bg-muted, #f6f7f9);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tk-chip {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+    background: #fffaf5;
+  }
+  .tk-row {
+    transition: background 0.15s ease;
+  }
+  .tk-row:hover {
+    background: color-mix(in oklab, var(--ds-color-bg, #fff) 92%, black);
+  }
+  .tk-actions {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+  .tk-copy {
+    cursor: pointer;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.375rem;
+    background: #fff;
+  }
+  .tk-copy:active {
+    transform: translateY(1px);
+  }
+  .tk-filterbar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0.5rem 0 1rem;
+    flex-wrap: wrap;
+  }
+  .tk-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+    border-radius: 0.5rem;
+    min-width: 18rem;
+    background: var(--ds-color-bg, #fff);
+    color: var(--ds-color-text, #0b1220);
+  }
+  .tk-seg {
+    display: inline-flex;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  .tk-seg button {
+    padding: 0.4rem 0.75rem;
+    background: var(--ds-color-bg, #fff);
+    border: 0;
+    cursor: pointer;
+  }
+  .tk-seg button[aria-pressed='true'] {
+    background: color-mix(in oklab, oklch(var(--ds-color-primary, 0.62 0.12 265)) 12%, white);
+    font-weight: 600;
+  }
+  .tk-preview--radius {
+    width: 34px;
+    height: 34px;
+    background: var(--ds-color-bg-muted, #f6f7f9);
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+  }
+  .tk-preview--swatch {
+    width: 34px;
+    height: 26px;
+    border-radius: 0.375rem;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+  }
+  .tk-preview--shadow {
+    width: 80px;
+    height: 36px;
+    border-radius: 0.5rem;
+    background: var(--ds-color-bg, #fff);
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+  }
+  .tk-preview--space {
+    width: 120px;
+    height: 10px;
+    background: var(--ds-color-bg-muted, #f6f7f9);
+    position: relative;
+    border-radius: 999px;
+    border: 1px solid var(--ds-color-border, #e6e7eb);
+  }
+  .tk-preview--space span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: color-mix(in oklab, oklch(var(--ds-color-primary, 0.62 0.12 265)) 35%, white);
+    border-radius: 999px;
+  }
+}

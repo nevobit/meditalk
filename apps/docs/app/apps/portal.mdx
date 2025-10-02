@@ -1,0 +1,604 @@
+# Portal Application
+
+The Portal is our main web application built with Next.js 14, providing a comprehensive user interface for desktop users.
+
+## Overview
+
+The Portal serves as the primary interface for users to interact with the repo platform. It's built with modern web technologies and follows best practices for performance, accessibility, and user experience.
+
+## Technology Stack
+
+### Core Technologies
+
+- **Next.js 14** - Full-stack React framework with App Router
+- **React 18** - UI library with concurrent features
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Utility-first CSS framework
+- **Design System** - Consistent UI components
+
+### State Management
+
+- **Zustand** - Lightweight state management
+- **React Query** - Server state management
+- **Context API** - Local state sharing
+
+### Development Tools
+
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Vitest** - Unit testing
+- **Playwright** - E2E testing
+
+## Project Structure
+
+```
+apps/portal/
+├── src/
+│   ├── app/              # Next.js App Router pages
+│   │   ├── (auth)/       # Authentication routes
+│   │   ├── dashboard/    # Dashboard pages
+│   │   ├── settings/     # Settings pages
+│   │   ├── globals.css   # Global styles
+│   │   ├── layout.tsx    # Root layout
+│   │   └── page.tsx      # Home page
+│   ├── components/       # Reusable components
+│   │   ├── ui/          # UI components
+│   │   ├── forms/       # Form components
+│   │   └── layout/      # Layout components
+│   ├── lib/             # Utility functions
+│   │   ├── api.ts       # API client
+│   │   ├── auth.ts      # Authentication utilities
+│   │   └── utils.ts     # General utilities
+│   ├── hooks/           # Custom React hooks
+│   ├── stores/          # Zustand stores
+│   └── types/           # TypeScript definitions
+├── public/              # Static assets
+├── next.config.js       # Next.js configuration
+├── tailwind.config.js   # Tailwind CSS configuration
+└── package.json         # Dependencies and scripts
+```
+
+## Key Features
+
+### Authentication & Authorization
+
+- **JWT-based authentication**
+- **Role-based access control (RBAC)**
+- **OAuth 2.0 integration**
+- **Session management**
+
+### Dashboard
+
+- **Real-time data visualization**
+- **Interactive charts and graphs**
+- **Customizable widgets**
+- **Responsive design**
+
+### User Management
+
+- **User profiles and settings**
+- **Team management**
+- **Permission management**
+- **Activity tracking**
+
+### Data Management
+
+- **CRUD operations**
+- **Bulk operations**
+- **Import/export functionality**
+- **Data validation**
+
+## Development
+
+### Getting Started
+
+```bash
+# Navigate to portal directory
+cd apps/portal
+
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+### Environment Variables
+
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4000/graphql
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=http://localhost:3000
+```
+
+### Available Scripts
+
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm lint         # Run ESLint
+pnpm lint:fix     # Fix ESLint issues
+pnpm test         # Run tests
+pnpm test:watch   # Run tests in watch mode
+pnpm test:e2e     # Run E2E tests
+```
+
+## Architecture
+
+### App Router Structure
+
+The Portal uses Next.js 14 App Router for file-based routing:
+
+```
+app/
+├── (auth)/
+│   ├── login/
+│   │   └── page.tsx
+│   ├── register/
+│   │   └── page.tsx
+│   └── layout.tsx
+├── dashboard/
+│   ├── overview/
+│   │   └── page.tsx
+│   ├── users/
+│   │   ├── [id]/
+│   │   │   └── page.tsx
+│   │   └── page.tsx
+│   └── layout.tsx
+├── settings/
+│   ├── profile/
+│   │   └── page.tsx
+│   ├── team/
+│   │   └── page.tsx
+│   └── page.tsx
+├── globals.css
+├── layout.tsx
+└── page.tsx
+```
+
+### Component Architecture
+
+Components are organized by responsibility:
+
+```typescript
+// UI Components (reusable)
+components/ui/
+├── Button.tsx
+├── Input.tsx
+├── Modal.tsx
+└── Table.tsx
+
+// Form Components
+components/forms/
+├── UserForm.tsx
+├── LoginForm.tsx
+└── SettingsForm.tsx
+
+// Layout Components
+components/layout/
+├── Header.tsx
+├── Sidebar.tsx
+├── Footer.tsx
+└── Navigation.tsx
+```
+
+### State Management
+
+#### Local State (useState/useReducer)
+
+```typescript
+function UserProfile() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // Component logic
+}
+```
+
+#### Global State (Zustand)
+
+```typescript
+interface UserStore {
+  user: User | null;
+  setUser: (user: User) => void;
+  logout: () => void;
+}
+
+const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+  logout: () => set({ user: null }),
+}));
+```
+
+#### Server State (React Query)
+
+```typescript
+function UsersList() {
+  const { data: users, isLoading, error } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => api.getUsers(),
+  });
+
+  if (isLoading) return <Loading />;
+  if (error) return <Error message={error.message} />;
+
+  return <UsersTable users={users} />;
+}
+```
+
+## API Integration
+
+### GraphQL Client
+
+```typescript
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+  cache: new InMemoryCache(),
+  headers: {
+    authorization: `Bearer ${token}`,
+  },
+});
+```
+
+### REST API Client
+
+```typescript
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor for authentication
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+```
+
+## Styling
+
+### Tailwind CSS
+
+The Portal uses Tailwind CSS for styling:
+
+```typescript
+function Card({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+      {children}
+    </div>
+  );
+}
+```
+
+### Design System Integration
+
+```typescript
+import { Button, Card, Text } from '{{packageName}}/design-system';
+
+function UserCard({ user }: { user: User }) {
+  return (
+    <Card>
+      <Text variant="heading">{user.name}</Text>
+      <Text variant="body">{user.email}</Text>
+      <Button variant="primary">View Profile</Button>
+    </Card>
+  );
+}
+```
+
+### Custom CSS
+
+For custom styles, use CSS modules:
+
+```css
+/* UserCard.module.css */
+.card {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.avatar {
+  @apply w-12 h-12 rounded-full;
+}
+
+.name {
+  @apply text-lg font-semibold text-gray-900;
+}
+```
+
+## Performance Optimization
+
+### Code Splitting
+
+```typescript
+// Lazy load components
+const UserProfile = lazy(() => import('./UserProfile'));
+
+function App() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <UserProfile />
+    </Suspense>
+  );
+}
+```
+
+### Image Optimization
+
+```typescript
+import Image from 'next/image';
+
+function Avatar({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={48}
+      height={48}
+      className="rounded-full"
+      priority={false}
+    />
+  );
+}
+```
+
+### Caching
+
+```typescript
+// React Query caching
+const { data } = useQuery({
+  queryKey: ['users'],
+  queryFn: () => api.getUsers(),
+  staleTime: 5 * 60 * 1000, // 5 minutes
+  cacheTime: 10 * 60 * 1000, // 10 minutes
+});
+```
+
+## Testing
+
+### Unit Tests
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import { UserCard } from './UserCard';
+
+describe('UserCard', () => {
+  it('renders user information', () => {
+    const user = { name: 'John Doe', email: 'john@example.com' };
+    render(<UserCard user={user} />);
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('john@example.com')).toBeInTheDocument();
+  });
+});
+```
+
+### Integration Tests
+
+```typescript
+import { render, screen, waitFor } from '@testing-library/react';
+import { UsersList } from './UsersList';
+
+describe('UsersList', () => {
+  it('loads and displays users', async () => {
+    render(<UsersList />);
+
+    await waitFor(() => {
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
+});
+```
+
+### E2E Tests
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('user can login', async ({ page }) => {
+  await page.goto('/login');
+  await page.fill('[data-testid="email"]', 'user@example.com');
+  await page.fill('[data-testid="password"]', 'password');
+  await page.click('[data-testid="login-button"]');
+
+  await expect(page).toHaveURL('/dashboard');
+});
+```
+
+## Deployment
+
+### Build Process
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build the application
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+### Environment Configuration
+
+```bash
+# Production environment variables
+NEXT_PUBLIC_API_URL=https://api.repo.com
+NEXT_PUBLIC_GRAPHQL_URL=https://api.repo.com/graphql
+NEXTAUTH_SECRET=production-secret
+NEXTAUTH_URL=https://portal.repo.com
+```
+
+### Docker Deployment
+
+```dockerfile
+FROM node:18-alpine AS base
+
+# Install dependencies
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# Build application
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm build
+
+# Production image
+FROM base AS runner
+WORKDIR /app
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+ENV PORT 3000
+ENV NODE_ENV production
+
+CMD ["node", "server.js"]
+```
+
+## Monitoring & Analytics
+
+### Error Tracking
+
+```typescript
+import * as Sentry from '@sentry/nextjs';
+
+Sentry.init({
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+});
+```
+
+### Performance Monitoring
+
+```typescript
+import { Analytics } from '@vercel/analytics/react';
+
+function App() {
+  return (
+    <>
+      <YourApp />
+      <Analytics />
+    </>
+  );
+}
+```
+
+### User Analytics
+
+```typescript
+import { track } from '{{packageName}}/analytics';
+
+function handleButtonClick() {
+  track('button_clicked', {
+    button_name: 'save_profile',
+    user_id: user.id,
+  });
+}
+```
+
+## Security
+
+### Authentication
+
+```typescript
+import { useSession } from 'next-auth/react';
+
+function ProtectedPage() {
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') return <Loading />;
+  if (status === 'unauthenticated') return <Login />;
+
+  return <Dashboard />;
+}
+```
+
+### Authorization
+
+```typescript
+function AdminOnly({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
+
+  if (!session?.user?.role === 'admin') {
+    return <AccessDenied />;
+  }
+
+  return <>{children}</>;
+}
+```
+
+### CSRF Protection
+
+```typescript
+// NextAuth.js provides CSRF protection automatically
+// For custom forms, use CSRF tokens
+```
+
+## Accessibility
+
+### ARIA Labels
+
+```typescript
+<button aria-label="Close dialog" onClick={onClose}>
+  <Icon name="close" />
+</button>
+```
+
+### Keyboard Navigation
+
+```typescript
+function Modal({ isOpen, onClose }: ModalProps) {
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen, onClose]);
+}
+```
+
+### Screen Reader Support
+
+```typescript
+<div role="main" aria-label="User dashboard">
+  <h1>Welcome back, {user.name}</h1>
+  <section aria-labelledby="stats-heading">
+    <h2 id="stats-heading">Statistics</h2>
+    {/* Stats content */}
+  </section>
+</div>
+```
+
+---
+
+For more information about specific features, see the **[Portal Features Guide](./features)** or **[API Integration](./api)**.

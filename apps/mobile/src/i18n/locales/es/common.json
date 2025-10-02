@@ -1,0 +1,12 @@
+{
+  "login": "Iniciar sesión",
+  "sendOtp": "Enviar OTP",
+  "verify": "Verificar y continuar",
+  "continueWithGoogle": "Continuar con Google",
+  "email": "Correo",
+  "code": "Código",
+  "home": "Inicio",
+  "product": "Producto",
+  "account": "Cuenta",
+  "hello": "Hola, {{name}}"
+}

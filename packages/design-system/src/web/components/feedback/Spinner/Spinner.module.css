@@ -1,0 +1,37 @@
+@layer components {
+  .root {
+    animation: spin 1s linear infinite;
+  }
+  .circle {
+    stroke: currentColor;
+    stroke-linecap: round;
+  }
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .sm {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  .md {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+  .lg {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+
+  .default {
+    color: var(--ds-fg-default);
+  }
+  .accent {
+    color: var(--ds-accent);
+  }
+  .inverse {
+    color: var(--ds-fg-inverse);
+  }
+}

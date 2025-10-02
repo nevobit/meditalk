@@ -1,0 +1,30 @@
+{
+  "name": "@mdi/cli",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "mdi": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.5.0",
+  "dependencies": {
+    "commander": "^14.0.0",
+    "execa": "^9.6.0",
+    "fs-extra": "^11.2.0",
+    "globby": "^14.0.2",
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@mdi/typescript-config": "workspace:*",
+    "@types/fs-extra": "^11.0.4",
+    "tsup": "8.0.1",
+    "typescript": "catalog:"
+  }
+}

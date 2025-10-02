@@ -1,0 +1,120 @@
+# Overview
+
+Welcome to the repo platform documentation. This comprehensive guide covers everything you need to know about our architecture, development practices, and platform components.
+
+## What is repo?
+
+repo is a modern, scalable platform built with a microservices architecture that provides:
+
+- **Multi-platform applications**: Web portal, mobile app, and marketing site
+- **Robust APIs**: GraphQL and REST APIs for flexible data access
+- **Design System**: Consistent UI components across all platforms
+- **Enterprise-grade infrastructure**: Kubernetes, AWS, and comprehensive monitoring
+
+## Platform Architecture
+
+Our platform follows a **monorepo structure** with clear separation of concerns:
+
+```
+repo/
+├── apps/                 # Applications
+│   ├── portal/          # Main web application
+│   ├── mobile/          # React Native mobile app
+│   ├── site/            # Marketing website
+│   ├── graphql/         # GraphQL API server
+│   └── rest/            # REST API server
+├── packages/            # Shared packages
+│   ├── design-system/   # UI component library
+│   ├── sdk/            # Client SDK
+│   ├── business-logic/  # Core business rules
+│   └── ...             # Other shared packages
+└── infrastructure/      # Infrastructure as Code
+```
+
+## Key Technologies
+
+### Frontend
+
+- **React 18** with TypeScript
+- **Next.js 14** for web applications
+- **React Native** for mobile
+- **Design System** for consistent UI
+
+### Backend
+
+- **Node.js** with TypeScript
+- **GraphQL** (Apollo Server)
+- **REST APIs** (Fastify/Express)
+- **PostgreSQL** for data persistence
+- **Redis** for caching
+
+### Infrastructure
+
+- **Kubernetes** for orchestration
+- **AWS** for cloud services
+- **Terraform** for infrastructure as code
+- **Docker** for containerization
+
+## Getting Started
+
+1. **[Getting Started](./getting-started)** - Set up your development environment
+2. **[Architecture Overview](./architecture/overview)** - Understand the system design
+3. **[Design System](./design-system/page)** - Explore our component library
+4. **[API Documentation](./api/graphql)** - Learn about our APIs
+
+## Development Workflow
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm 8+
+- Docker
+- Git
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/repo/repo.git
+cd repo
+
+# Install dependencies
+pnpm install
+
+# Start development servers
+pnpm dev
+```
+
+### Available Scripts
+
+- `pnpm dev` - Start all development servers
+- `pnpm build` - Build all packages and applications
+- `pnpm test` - Run tests across the monorepo
+- `pnpm lint` - Run linting and formatting checks
+
+## Contributing
+
+We welcome contributions! Please see our **[Contributing Guide](./contributing)** for:
+
+- Code standards and conventions
+- Pull request process
+- Development guidelines
+- Testing requirements
+
+## Support
+
+- **Documentation**: This site contains comprehensive guides
+- **Issues**: Report bugs and request features on [GitHub](https://github.com/repo/repo)
+- **Discussions**: Join our community discussions
+- **Security**: Report security issues privately
+
+## Platform Status
+
+- **Production**: Stable and actively maintained
+- **Development**: Continuous improvements and new features
+- **Mobile**: iOS and Android apps available
+- **APIs**: GraphQL and REST APIs fully documented
+
+---
+
+Ready to dive in? Start with the **[Getting Started](./getting-started)** guide or explore any section that interests you.
