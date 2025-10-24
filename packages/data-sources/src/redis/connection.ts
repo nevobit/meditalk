@@ -1,6 +1,6 @@
 import { Logger, MonoContext } from '@mdi/core-modules';
 import IORedis, {
-  RedisOptions,
+  type RedisOptions,
 } from 'ioredis';
 import { URL } from 'url';
 

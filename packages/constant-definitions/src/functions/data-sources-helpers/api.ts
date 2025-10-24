@@ -1,10 +1,10 @@
 import { MonoContext } from '@mdi/core-modules';
 import { DATA_SOURCES_KEY } from './constants';
 import {
-    AxiosRequestConfig,
+    type AxiosRequestConfig,
 } from "axios";
 import {
-    FunctionQueueResult,
+    type FunctionQueueResult,
 } from "@simplyhexagonal/function-queue";
 
 export interface GenericApi {

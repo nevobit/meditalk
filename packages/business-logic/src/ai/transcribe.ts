@@ -68,7 +68,7 @@ export const transcribe = async (audio: AudioInput) => {
         // Handle stream as before
         await new Promise<void>((resolve, reject) => {
             const writeStream = fs.createWriteStream(tempPath);
-            audio.file.pipe(writeStream);
+            (audio.file as UploadFile).pipe(writeStream);
             writeStream.on('finish', () => resolve());
             writeStream.on('error', (err) => reject(err));
         });

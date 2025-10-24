@@ -1,4 +1,4 @@
-import { FeatureFlag } from "@mdi/contracts";
+import type { FeatureFlag } from "@mdi/contracts";
 
 export const planFeatures: Record<"free" | "pro" | "enterprise", FeatureFlag[]> = {
     free: [],

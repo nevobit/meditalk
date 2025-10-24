@@ -1,5 +1,5 @@
 import { getRedisReadClient, getRedisWriteClient } from "@mdi/constant-definitions";
-import { CreateUserDto } from "@mdi/contracts";
+import type { CreateUserDto } from "@mdi/contracts";
 import { issueJwt } from "@mdi/security";
 import { createUser, findByEmail } from "../users";
 

@@ -1,7 +1,7 @@
-import { NormalizedRequest, RequestInterface } from '../../types/normalized-request';
+import type { NormalizedRequest, RequestInterface } from '../../types/normalized-request';
 import { alertOverrideConflict } from '../alert-override-conflict';
 import { Logger, MonoContext } from '@mdi/core-modules';
-import { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 type Headers = Record<string, string | string[] | undefined>;
 
 export const normalizeFastifyRequest = <R extends RequestInterface = RequestInterface>({

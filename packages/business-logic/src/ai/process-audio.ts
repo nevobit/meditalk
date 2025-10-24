@@ -62,7 +62,7 @@ export const processAudio = async (data: ProcessAudioDto): Promise<ProcessAudioR
 export const transcribeAudio = async (data: TranscribeAudioDto) => {
     const result = await transcribe({
         filename: data.audioMetadata.filename,
-        file: data.audioFile,
+        file: data.audioFile as Buffer<ArrayBufferLike>,
         model: data.aiConfig.model,
         mimetype: data.audioMetadata.mimeType,
         language: data.aiConfig.language

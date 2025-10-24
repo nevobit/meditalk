@@ -1,8 +1,8 @@
-import { InitApiOptions, initApi } from "./api";
-import { InitMongooseOptions, initMongoose } from "./mongoose";
-import { InitPostgresOptions, initPostgresDb } from "./postgresql";
-import { InitRedisOptions, initRedis } from "./redis";
-import { GenericApi } from './api';
+import { type InitApiOptions, initApi } from "./api";
+import { type InitMongooseOptions, initMongoose } from "./mongoose";
+import { type InitPostgresOptions, initPostgresDb } from "./postgresql";
+import { type InitRedisOptions, initRedis } from "./redis";
+import { type GenericApi } from './api';
 
 export interface InitDataSourcesOptions {
     api?: InitApiOptions[];

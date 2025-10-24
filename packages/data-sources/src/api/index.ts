@@ -1,12 +1,12 @@
 import axios, {
-  AxiosRequestHeaders,
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosHeaderValue
+  type AxiosRequestHeaders,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type AxiosHeaderValue
 } from "axios";
 import FunctionQueue, {
-  FunctionQueueResult,
-  QueueableFunction,
+  type FunctionQueueResult,
+  type QueueableFunction,
 } from "@simplyhexagonal/function-queue";
 import { MonoContext } from "@mdi/core-modules";
 import * as crypto from 'crypto';

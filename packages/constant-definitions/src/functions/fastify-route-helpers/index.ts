@@ -1,5 +1,5 @@
-import { RouteOptions, FastifyRequest, FastifyReply } from 'fastify';
-import { NormalizedRequest } from '../../types';
+import { type RouteOptions, type FastifyRequest, type FastifyReply } from 'fastify';
+import type { NormalizedRequest } from '../../types';
 import { normalizeFastifyRequest } from '../normalize-fastify-request';
 
 export enum RouteMethod {

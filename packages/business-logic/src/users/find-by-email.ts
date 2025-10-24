@@ -1,5 +1,5 @@
 import { Collection, getModel } from "@mdi/constant-definitions";
-import { User } from "@mdi/contracts";
+import type { User } from "@mdi/contracts";
 import { UserSchemaMongo } from "@mdi/contracts";
 
 export const findByEmail = async (email: string): Promise<User> => {

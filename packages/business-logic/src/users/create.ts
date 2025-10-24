@@ -1,5 +1,5 @@
 import { Collection, getModel } from "@mdi/constant-definitions";
-import { CreateUserDto, User, UserSchemaMongo } from "@mdi/contracts";
+import { type CreateUserDto, type User, UserSchemaMongo } from "@mdi/contracts";
 
 export const createUser = async (user: CreateUserDto) => {
     const model = getModel<User>(Collection.USERS, UserSchemaMongo);
