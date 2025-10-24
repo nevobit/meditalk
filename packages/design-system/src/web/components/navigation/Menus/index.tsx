@@ -93,12 +93,11 @@ export const Menus: React.FC<MenusProps> & {
         restoreFocus,
     };
 
-    // Global listeners: click outside + Escape
     React.useEffect(() => {
         if (openId == null) return;
         const onDocClick = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            if (target.closest("[data-ds-menu-root='true']")) return; // inside menus
+            if (target.closest("[data-ds-menu-root='true'], [data-ds-menu-portal='true']")) return; // clicks dentro del root o del portal
             closeAll();
         };
         const onEsc = (e: KeyboardEvent) => {
@@ -120,7 +119,7 @@ export const Menus: React.FC<MenusProps> & {
             <div data-ds-menu-root="true" className={styles.scope}>
                 {React.Children.map(children, (child) =>
                     React.isValidElement(child)
-                        ? React.cloneElement(child as unknown, { __setLastToggleRef: (el: HTMLElement | null) => { lastToggleRef.current = el; } })
+                        ? React.cloneElement(child as React.ReactElement<{ __setLastToggleRef?: (el: HTMLElement | null) => void }>, { __setLastToggleRef: (el: HTMLElement | null) => { lastToggleRef.current = el; } })
                         : child
                 )}
             </div>
@@ -290,6 +289,7 @@ const List: React.FC<ListProps> = ({
                 ref={ulRef}
                 style={{ ...style, maxHeight }}
                 data-placement={currentPlacement}
+                data-ds-menu-portal="true"
             >
                 {children}
             </ul>
@@ -315,7 +315,12 @@ const Item: React.FC<ItemProps> = ({
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(e);
-        closeAll();
+        if (!e.defaultPrevented) {
+            console.log('Closing menu for item:', id);
+            closeAll();
+        } else {
+            console.log('Keeping menu open for item:', id);
+        }
     };
 
     return (
@@ -347,7 +352,7 @@ function computePosition(rect: DOMRect, placement: Placement, offset = 8): React
     // const vw = typeof window !== "undefined" ? window.innerWidth : 0;
     // const vh = typeof window !== "undefined" ? window.innerHeight : 0;
 
-    const base: React.CSSProperties = { position: "fixed", zIndex: "var(--ds-z-dropdown)" as unknown };
+    const base: React.CSSProperties = { position: "fixed", zIndex: "var(--ds-z-dropdown)" };
     const w = rect.width;
     const h = rect.height;
 

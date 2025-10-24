@@ -4,7 +4,13 @@ import RichTextEditor from "../../components/RichTextEditor";
 import { useProcessAudio } from "../../../../shared/api/audio-queries";
 import type { ProcessAudioRequest } from "../../../../services/audioService";
 import styles from "./ReportGeneration.module.css";
-
+import { Menus } from "@mdi/design-system";
+import { BookOpenCheck, Copy, FileText, PillBottle, Save } from "lucide-react";
+export const htmlToPlainText = (html: string): string => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || '';
+};
 type AudioData = {
     audioBlob: Blob;
     audioUrl: string;
@@ -165,14 +171,14 @@ export default function ReportGeneration() {
         }
     };
 
-    const formatMedicalReport = (content: string): string => {
+    const formatMedicalReport = (content: string | Record<string, unknown>): string => {
         if (typeof content === 'object' && content !== null) {
-            const formatArray = (arr: string[]): string => {
+            const formatArray = (arr: unknown[]): string => {
                 if (!Array.isArray(arr)) return String(arr);
                 return arr.join(', ');
             };
 
-            const formatValue = (value: string | string[]): string => {
+            const formatValue = (value: string | unknown[] | Record<string, unknown> | undefined): string => {
                 if (Array.isArray(value)) {
                     return formatArray(value);
                 }
@@ -221,26 +227,130 @@ export default function ReportGeneration() {
         return <div>Cargando...</div>;
     }
 
+    const copyPlainText = async () => {
+        const plainSummary = htmlToPlainText(editableSummary);
+        const plainReport = htmlToPlainText(editableReport);
+        const textToCopy = `Resumen: ${plainSummary}\n\nInforme: ${plainReport}`;
+
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+        } catch {
+            setError('Error al copiar al portapapeles');
+        }
+    };
+    const generatePDF = async (type: 'informe' | 'receta' | 'examen') => {
+        try {
+            const plainSummary = htmlToPlainText(editableSummary);
+            const plainReport = htmlToPlainText(editableReport);
+            const transcription = reportData?.transcription || '';
+
+            // Crear el prompt según el tipo de documento
+            let prompt = '';
+            let fileName = '';
+
+            switch (type) {
+                case 'informe':
+                    prompt = `Genera un informe médico profesional basado en la siguiente información:
+
+Transcripción de la consulta:
+${transcription}
+
+Resumen médico:
+${plainSummary}
+
+Informe médico:
+${plainReport}
+
+Formato el contenido como un informe médico profesional con:
+- Encabezado con datos del paciente
+- Motivo de consulta
+- Antecedentes
+- Examen físico
+- Diagnóstico
+- Tratamiento
+- Recomendaciones
+- Firma del médico`;
+                    fileName = 'Informe Médico.pdf';
+                    break;
+
+                case 'receta':
+                    prompt = `Genera una receta médica basada en la siguiente información:
+
+Transcripción de la consulta:
+${transcription}
+
+Informe médico:
+${plainReport}
+
+Extrae todos los medicamentos mencionados y crea una receta médica profesional con:
+- Datos del paciente
+- Medicamentos con dosis y frecuencia
+- Instrucciones de uso
+- Firma del médico
+- Fecha de emisión`;
+                    fileName = 'Receta Médica.pdf';
+                    break;
+
+                case 'examen':
+                    prompt = `Genera una solicitud de exámenes médicos basada en la siguiente información:
+
+Transcripción de la consulta:
+${transcription}
+
+Informe médico:
+${plainReport}
+
+Crea una solicitud de exámenes con:
+- Datos del paciente
+- Exámenes solicitados con indicaciones
+- Instrucciones de preparación
+- Firma del médico
+- Fecha de emisión`;
+                    fileName = 'Solicitud de Exámenes.pdf';
+                    break;
+            }
+
+            // Llamar a la API para generar el PDF
+            const response = await fetch('/api/generate-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    prompt,
+                    type,
+                    transcription,
+                    summary: plainSummary,
+                    report: plainReport
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al generar el PDF');
+            }
+
+            // Descargar el PDF
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            setError(`Error al generar ${type}: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        }
+    };
+
+
     return (
         <div className={styles.surface}>
             <div className={styles.layout}>
                 <section className={styles.mainContent} aria-label="Generación de informe médico">
-                    <div className={styles.header}>
-                        <div className={styles.titleSection}>
-                            <h1 className={styles.title}>Informe Médico Generado</h1>
-                            <div className={styles.status}>
-                                {isGenerating ? (
-                                    <span className={styles.statusProcessing}>Generando informe...</span>
-                                ) : reportData?.status === "completed" ? (
-                                    <span className={styles.statusCompleted}>✓ Informe completado</span>
-                                ) : error ? (
-                                    <span className={styles.statusError}>✗ Error en generación</span>
-                                ) : null}
-                            </div>
-                        </div>
-                    </div>
-
-
                     {error && (
                         <div className={styles.errorBox}>
                             <p>{error}</p>
@@ -250,7 +360,6 @@ export default function ReportGeneration() {
                         </div>
                     )}
 
-                    {/* Loading State */}
                     {isGenerating && (
                         <div className={styles.loadingBox}>
                             <div className={styles.spinner}></div>
@@ -259,8 +368,10 @@ export default function ReportGeneration() {
                         </div>
                     )}
 
-                    {reportData && reportData.status === "completed" && (
+                    {!isGenerating && reportData && reportData.status === "completed" && (
                         <>
+                            <div className={styles.header} >
+
                             <div className={styles.viewToggle}>
                                 <button
                                     className={`${styles.toggleBtn} ${activeView === "medical" ? styles.active : ""}`}
@@ -273,8 +384,23 @@ export default function ReportGeneration() {
                                     onClick={() => setActiveView("transcription")}
                                 >
                                     Transcripción
-                                </button>
+                                    </button>
+                                </div>
+
+                                <div className={styles.headerActions}>
+                                    <Menus.Toggle id="actions-menu" />
+                                    <Menus.List id="actions-menu">
+                                        <Menus.Item id="save" leadingIcon={<Save strokeWidth={1.5} width={16} />} onClick={handleSaveChanges}>Guardar</Menus.Item>
+                                        <Menus.Item id="copy" leadingIcon={<Copy strokeWidth={1.5} width={16} />} onClick={copyPlainText} >Copiar</Menus.Item>
+                                        <Menus.Divider />
+                                        <Menus.Label>Descargar:</Menus.Label>
+                                        <Menus.Item id="report" leadingIcon={<FileText strokeWidth={1.5} width={16} />} onClick={(e) => { generatePDF('informe'); e.preventDefault(); }}>Informe PDF</Menus.Item>
+                                        <Menus.Item id="recipe" leadingIcon={<PillBottle strokeWidth={1.5} width={16} />} onClick={(e) => { generatePDF('receta'); e.preventDefault(); }}>Receta Médica</Menus.Item>
+                                        <Menus.Item id="exams" leadingIcon={<BookOpenCheck strokeWidth={1.5} width={16} />} onClick={(e) => { generatePDF('examen'); e.preventDefault(); }}>Solicitud de Exámenes</Menus.Item>
+                                    </Menus.List>
+                                </div>
                             </div>
+
 
                             {/* Content Display */}
                             <div className={styles.contentArea}>
@@ -321,19 +447,19 @@ export default function ReportGeneration() {
                             </div>
 
                             {/* Action Buttons */}
-                            <div className={styles.actions}>
+                            {/* <div className={styles.actions}>
                                 <button className={styles.btnSecondary} onClick={handleBackToRecording}>
                                     ← Volver a Grabación
                                 </button>
                                 {activeView === "medical" && (
-                                    <button className={styles.btnSave} onClick={handleSaveChanges}>
+                                    <button className={styles.btnSave} >
                                         Guardar Cambios
                                     </button>
                                 )}
                                 <button className={styles.btnPrimary} onClick={handleNewRecording}>
                                     Nueva Grabación
                                 </button>
-                            </div>
+                            </div> */}
                         </>
                     )}
                 </section>

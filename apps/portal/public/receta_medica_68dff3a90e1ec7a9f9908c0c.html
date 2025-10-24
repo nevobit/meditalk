@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Receta Médica</title>
+    <style>
+      @media print {
+        @page {
+          margin: 20px;
+        }
+        body {
+          margin: 0;
+          padding: 20px;
+        }
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.4;
+        color: #333;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 1rem;
+      }
+      .clinic-name {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin: 0 0 0.5rem 0;
+      }
+      .title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0 0 1rem 0;
+      }
+      .info-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+      .info-column {
+        padding: 0.5rem;
+      }
+      .info-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+      }
+      .info-value {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+      .medications-section {
+        margin-bottom: 2rem;
+      }
+      .medications-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin: 0 0 1rem 0;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+      }
+      .medications-content {
+        padding: 1rem;
+        background: #fff;
+        border-radius: 8px;
+      }
+      .signature {
+        margin-top: 3rem;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 1rem;
+      }
+      .signature-line {
+        border-top: 1px solid #000;
+        width: 200px;
+        margin: 10px auto;
+      }
+      .signature-image {
+        max-width: 200px;
+        max-height: 100px;
+        margin: 10px auto;
+      }
+      .qr-section {
+        text-align: center;
+        margin-top: 2rem;
+      }
+      .qr-code {
+        width: 100px;
+        height: 100px;
+        background: #008080;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+      }
+      .validation-text {
+        font-size: 12px;
+        color: #666;
+        margin-top: 1rem;
+        text-align: center;
+      }
+      .print-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background: #008080;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      @media print {
+        .print-button {
+          display: none;
+        }
+      }
+    </style>
+    <script>
+      function printAsPDF() {
+        window.print();
+      }
+      // Auto-print when page loads
+      window.onload = function () {
+        setTimeout(function () {
+          window.print();
+        }, 500);
+      };
+    </script>
+  </head>
+  <body>
+    <button class="print-button" onclick="printAsPDF()">Imprimir como PDF</button>
+
+    <div class="header">
+      <div class="clinic-name">Clínica Alemana</div>
+      <div class="title">Receta Médica</div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-column">
+        <div class="info-label">Profesional:</div>
+        <div class="info-value">Dr. MÉDICO ESPECIALISTA</div>
+        <div class="info-label">RUT:</div>
+        <div class="info-value">12345678-9</div>
+        <div class="info-label">Especialidad:</div>
+        <div class="info-value">Medicina General</div>
+        <div class="info-label">Lugar:</div>
+        <div class="info-value">CONSULTORIO</div>
+      </div>
+
+      <div class="info-column">
+        <div class="info-label">Paciente:</div>
+        <div class="info-value">PACIENTE EJEMPLO</div>
+        <div class="info-label">Sexo:</div>
+        <div class="info-value">MASCULINO</div>
+        <div class="info-label">RUT:</div>
+        <div class="info-value">98765432-1</div>
+        <div class="info-label">Fecha Nacimiento:</div>
+        <div class="info-value">01/01/1980 (43a)</div>
+      </div>
+    </div>
+
+    <div class="medications-section">
+      <div class="medications-title">Receta médica</div>
+      <div class="medications-content">
+        <div style="margin-bottom: 1.5rem">
+          <div style="display: flex; align-items: flex-start; margin-bottom: 0.5rem">
+            <span style="font-size: 1.2rem; margin-right: 0.5rem; margin-top: 0.2rem; color: #000"
+              >•</span
+            >
+            <div style="flex: 1">
+              <div style="font-size: 1rem; font-weight: 500; color: #000; line-height: 1.4">
+                Timolol 1 gota en cada ojo por día Solución oftálmica (No mencionado) (Temporal)
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Timolol maleato
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Instilar 1 gota en cada ojo una vez al día.
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                A partir de: 03-10-2025
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Suspensión del tratamiento actual.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem">
+          <div style="display: flex; align-items: flex-start; margin-bottom: 0.5rem">
+            <span style="font-size: 1.2rem; margin-right: 0.5rem; margin-top: 0.2rem; color: #000"
+              >•</span
+            >
+            <div style="flex: 1">
+              <div style="font-size: 1rem; font-weight: 500; color: #000; line-height: 1.4">
+                Predforte 1 gota en cada ojo cada 12 horas Solución oftálmica (No mencionado)
+                (Temporal)
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Acetato de prednisolona
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Instilar 1 gota en cada ojo cada 12 horas.
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                A partir de: 03-10-2025
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Suspensión del tratamiento actual.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem">
+          <div style="display: flex; align-items: flex-start; margin-bottom: 0.5rem">
+            <span style="font-size: 1.2rem; margin-right: 0.5rem; margin-top: 0.2rem; color: #000"
+              >•</span
+            >
+            <div style="flex: 1">
+              <div style="font-size: 1rem; font-weight: 500; color: #000; line-height: 1.4">
+                Tobradex 1 gota cada 8 horas en cada ojo Solución oftálmica (No mencionado)
+                (Temporal)
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Tobramicina y dexametasona
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Instilar 1 gota en cada ojo cada 8 horas.
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                A partir de: 03-10-2025
+              </div>
+
+              <div
+                style="
+                  font-size: 0.9rem;
+                  color: #374151;
+                  margin-top: 0.25rem;
+                  margin-left: 1.5rem;
+                  line-height: 1.4;
+                ">
+                Suspensión del tratamiento actual.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="signature">
+      <div class="signature-line"></div>
+      <div style="font-weight: 600; margin-top: 0.5rem">Dr. MÉDICO ESPECIALISTA</div>
+    </div>
+
+    <div class="qr-section">
+      <div class="qr-code">QR</div>
+    </div>
+  </body>
+</html>

@@ -138,10 +138,19 @@ self.addEventListener("notificationclick", (e) => {
     })());
 });
 
-self.addEventListener("periodicsync", (e: PeriodicSyncEvent) => {
+declare global {
+    interface PeriodicSyncEvent extends ExtendableEvent {
+        readonly tag: string;
+        waitUntil(promise: Promise<unknown>): void;
+    }
+}
+
+self.addEventListener("periodicsync", (event) => {
+    const e = event as PeriodicSyncEvent;
     const tag = e.tag || "";
     if (tag === "revoluc-periodic-refresh") {
         e.waitUntil((async () => {
+            // Do periodic sync work here if needed
         })());
     }
 });

@@ -5,7 +5,7 @@ export type UpdateReportDto = Partial<CreateReportDto>;
 
 // DTOs for transcription and report generation
 export interface TranscribeAudioDto {
-    audioFile: Buffer;
+    audioFile: unknown;
     audioMetadata: AudioMetadata;
     aiConfig: AIConfig;
     userId: string;
@@ -30,7 +30,7 @@ export interface GenerateReportResponse {
 }
 
 export interface ProcessAudioDto {
-    audioFile: Buffer;
+    audioFile: unknown;
     audioMetadata: AudioMetadata;
     aiConfig: AIConfig;
     templateId: string;

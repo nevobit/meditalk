@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import styles from "./Table.module.css";
-import { sortRows, paginate, SortDir } from "./logic";
+import { sortRows, paginate, type SortDir } from "./logic";
 import { cx } from "../../../../utils";
 type Align = "left" | "center" | "right";
 

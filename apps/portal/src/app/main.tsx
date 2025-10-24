@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import "@mdi/design-system/css/web.css";
-import { buildProvidersTree, ToastProvider, Modal } from "@mdi/design-system";
+import { buildProvidersTree, ToastProvider, Modal, Menus } from "@mdi/design-system";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -13,6 +13,7 @@ import Application from "./Application";
 
 const ProvidersTree = buildProvidersTree([
   [Modal, {}],
+  [Menus, {}],
   [ToastProvider, {}],
   [I18nProvider, {}],
   [CurrencyProvider, {}],

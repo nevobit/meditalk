@@ -1,4 +1,4 @@
-import { Base } from '../../../common';
+import type { Base } from '../../../common';
 
 export interface Setting extends Base {
     name: string;
