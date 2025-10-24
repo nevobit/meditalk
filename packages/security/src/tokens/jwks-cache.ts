@@ -1,4 +1,4 @@
-import { createRemoteJWKSet, jwtVerify, JWTPayload, JWTVerifyResult } from "jose";
+import { createRemoteJWKSet, jwtVerify, type JWTPayload, type JWTVerifyResult } from "jose";
 
 const JWKS_CACHE = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
 

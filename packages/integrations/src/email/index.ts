@@ -1,6 +1,6 @@
 import type { EmailProvider } from "./types";
 import { createResendProvider } from "./providers/resend";
-import { RenderInput, renderTemplate } from "./templates/render";
+import { type RenderInput, renderTemplate } from "./templates/render";
 
 type CreateMailerOptions = {
     provider?: "resend" | "ses" | "smtp";

@@ -1,4 +1,4 @@
-import jwt, { JwtPayload, SignOptions, VerifyOptions } from "jsonwebtoken";
+import jwt, { type JwtPayload, type SignOptions, type VerifyOptions } from "jsonwebtoken";
 
 
 export interface IssueJwtOptions extends SignOptions {
