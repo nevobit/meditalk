@@ -424,6 +424,9 @@ importers:
       '@mdi/security':
         specifier: workspace:*
         version: link:../../packages/security
+      axios:
+        specifier: ^1.11.0
+        version: 1.11.0
       dotenv:
         specifier: ^17.2.1
         version: 17.2.1
