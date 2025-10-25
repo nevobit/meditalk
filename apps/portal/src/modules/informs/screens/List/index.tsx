@@ -1,4 +1,7 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useReports } from "../../../../shared/api/report-queries";
+import { useSession } from "../../../../shared/state-manager";
 import styles from "./List.module.css";
 
 export type ReportRow = {
@@ -7,6 +10,8 @@ export type ReportRow = {
     durationSec: number;
     patient?: string;
     template?: string;
+    status?: 'processing' | 'completed' | 'failed';
+    filename?: string;
 };
 
 type SortKey = "date" | "time" | "duration";
@@ -14,9 +19,6 @@ type SortDir = "asc" | "desc";
 
 type Props = {
     title?: string;
-    rows: ReportRow[];
-    loading?: boolean;
-    error?: string | null;
     pageSizeOptions?: number[];
     initialPageSize?: number;
     onView?: (id: string) => void;
@@ -43,13 +45,24 @@ const formatDuration = (sec: number) => {
 
 export default function ReportHistoryTable({
     title = "Historial de informes",
-    rows,
-    loading,
-    error,
     pageSizeOptions = [10, 25, 50],
     initialPageSize = 10,
     onView,
 }: Props) {
+    const navigate = useNavigate();
+    const { user } = useSession();
+    const { data: reports = [], isLoading: loading, error } = useReports(user?.id || '');
+
+    // Convert reports to ReportRow format
+    const rows: ReportRow[] = reports.map(report => ({
+        id: report.id,
+        date: report.createdAt,
+        durationSec: Math.floor(report.audioMetadata.duration),
+        patient: 'Paciente', // You can add patient info if available
+        template: `Plantilla ${report.templateId}`,
+        status: report.status,
+        filename: report.audioMetadata.filename,
+    }));
     /* filters / query */
     const [q, setQ] = useState("");
     const [from, setFrom] = useState<string>("");
@@ -188,7 +201,14 @@ export default function ReportHistoryTable({
                                 <td style={{ textAlign: "right" }}>
                                     <button
                                         className={styles.actionBtn}
-                                        onClick={() => onView?.(r.id)}
+                                        onClick={() => {
+                                            if (onView) {
+                                                onView(r.id);
+                                            } else {
+                                                // Navigate to report view
+                                                navigate(`/reports/${r.id}`);
+                                            }
+                                        }}
                                         aria-label="Ver informe"
                                         title="Ver informe"
                                     >
@@ -203,7 +223,7 @@ export default function ReportHistoryTable({
                         )}
 
                         {!loading && !!error && (
-                            <tr><td colSpan={4} className={styles.error}>Error: {error}</td></tr>
+                            <tr><td colSpan={4} className={styles.error}>Error: {error?.message || 'Error desconocido'}</td></tr>
                         )}
                     </tbody>
                 </table>

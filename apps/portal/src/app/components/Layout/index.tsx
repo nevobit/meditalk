@@ -34,7 +34,7 @@ const Layout = () => {
                         id: "main",
                         items: [
                             { key: "recording", label: "Grabación", icon: Mic, href: "/" },
-                            { key: "docs", label: "Mis Informes", icon: FileText, href: "/list" },
+                            { key: "docs", label: "Mis Informes", icon: FileText, href: "/informs" },
                             { key: "inbox", label: "Personalización", icon: Pencil, href: "/inbox" },
                             { key: "billing", label: "Suscripción", icon: CreditCard, href: "/patients" },
                         ],

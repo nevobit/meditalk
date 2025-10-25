@@ -3,12 +3,14 @@ import { healthCheckRoute } from './health-check';
 import { authRoutes } from './auth';
 import { audioRoutes } from './audio';
 import { pdfRoutes } from './pdf';
+import { reportRoutes } from './reports';
 
 const routes: RouteOptions[] = [
     healthCheckRoute,
     ...authRoutes,
     ...audioRoutes,
     ...pdfRoutes,
+    ...reportRoutes,
 ];
 
 export const registerRoutes = (fastify: FastifyInstance) => {

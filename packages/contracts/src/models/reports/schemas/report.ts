@@ -1,8 +1,8 @@
 import type { Base } from '../../../common';
 
 export interface AudioMetadata {
-    duration: number; // in seconds
-    size: number; // in bytes
+    duration: number;
+    size: number; 
     filename: string;
     mimeType: string;
 }

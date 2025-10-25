@@ -7,6 +7,7 @@ import ErrorBoundary from "@/app/screens/ErrorBoundary";
 import RecordingScreen from "@/modules/recording/screens/Recording";
 import ReportHistoryTable from "@/modules/informs/screens/List";
 import ReportGeneration from "@/modules/reports/screens/ReportGeneration";
+import ReportView from "@/modules/reports/screens/ReportView";
 
 const Layout = lazy(() => import("@/app/components/Layout"));
 const Dashbaord = lazy(() => import("@/modules/dashboard/screens/home"));
@@ -21,7 +22,7 @@ export const privateRoutes: RouteObject[] = [
         children: [
             { index: true, element: withSuspense(<Dashbaord />) },
             {
-                path: '/recording', element: withSuspense(<RecordingScreen templates={[
+                path: PrivateRoutes.RECORDING, element: withSuspense(<RecordingScreen templates={[
                     {
                         id: '1',
                         name: 'Consulta General',
@@ -54,8 +55,9 @@ export const privateRoutes: RouteObject[] = [
                     }
                 ]} />)
             },
-            { path: '/report-generation', element: withSuspense(<ReportGeneration />) },
-            { path: '/list', element: withSuspense(<ReportHistoryTable rows={[{ id: '1', date: '2021-01-01', durationSec: 100, patient: 'Juan Perez', template: 'Receta' }, { id: '2', date: '2021-01-02', durationSec: 200, patient: 'Maria Gomez', template: 'Receta' }, { id: '3', date: '2021-01-03', durationSec: 300, patient: 'Pedro Gomez', template: 'Receta' }]} />) },
+            { path: PrivateRoutes.REPORT_GENERATION, element: withSuspense(<ReportGeneration />) },
+            { path: PrivateRoutes.REPORTS_LIST, element: withSuspense(<ReportHistoryTable />) },
+            { path: PrivateRoutes.REPORT_VIEW, element: withSuspense(<ReportView />) },
         ]
     }
 ];

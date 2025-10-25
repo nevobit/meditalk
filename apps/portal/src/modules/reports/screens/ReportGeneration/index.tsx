@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import RichTextEditor from "../../components/RichTextEditor";
 import { useProcessAudio } from "../../../../shared/api/audio-queries";
+import { useUpdateReport } from "../../../../shared/api/report-queries";
+import { downloadPDF, type PDFGenerationData } from "../../../../services/pdfService";
 import type { ProcessAudioRequest } from "../../../../services/audioService";
 import styles from "./ReportGeneration.module.css";
 import { Menus } from "@mdi/design-system";
 import { BookOpenCheck, Copy, FileText, PillBottle, Save } from "lucide-react";
+import { useSession } from "@/shared";
 export const htmlToPlainText = (html: string): string => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
@@ -23,6 +26,7 @@ type AudioData = {
 };
 
 type ReportData = {
+    id?: string;
     medicalSummary: string;
     generalReport: string;
     transcription: string;
@@ -75,7 +79,9 @@ export default function ReportGeneration() {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = useSession();
     const processAudioMutation = useProcessAudio();
+    const updateReportMutation = useUpdateReport();
 
     useEffect(() => {
         const data = location.state as AudioData | null;
@@ -126,6 +132,7 @@ export default function ReportGeneration() {
             }
 
             setReportData({
+                id: response.reportId,
                 medicalSummary: response.medicalSummary || '',
                 generalReport: response.generalReport || '',
                 transcription: response.transcription || '',
@@ -152,11 +159,35 @@ export default function ReportGeneration() {
         navigate("/recording", { state: audioData });
     };
 
-    const handleSaveChanges = () => {
-        // Aquí puedes implementar la lógica para guardar los cambios
-        // Por ejemplo, enviar a la API o guardar en localStorage
-        console.log("Guardando cambios:", { editableSummary, editableReport });
-        alert("Cambios guardados exitosamente");
+    const handleSaveChanges = async () => {
+        if (!reportData?.id) {
+            setError("No hay un reporte para guardar");
+            return;
+        }
+
+        console.log('user', user);
+        try {
+            await updateReportMutation.mutateAsync({
+                id: reportData.id,
+                data: {
+                    userId: user?.id || '',
+                    medicalSummary: editableSummary,
+                    generalReport: editableReport,
+                }
+            });
+
+            // Update local state
+            setReportData(prev => prev ? {
+                ...prev,
+                medicalSummary: editableSummary,
+                generalReport: editableReport,
+            } : null);
+
+            alert("Cambios guardados exitosamente");
+        } catch (err) {
+            setError("Error al guardar los cambios. Por favor, intenta nuevamente.");
+            console.error("Error saving changes:", err);
+        }
     };
 
     const formatProcessingTime = (ms: number): string => {
@@ -306,108 +337,105 @@ export default function ReportGeneration() {
     const generatePDF = async (type: 'informe' | 'receta' | 'examen') => {
         try {
             const plainSummary = htmlToPlainText(editableSummary);
-            const plainReport = htmlToPlainText(editableReport);
+            console.log('plainSummary', plainSummary);
+            const plainReport = JSON.stringify(editableReport);
+            console.log('plainReport', plainReport);
             const transcription = reportData?.transcription || '';
 
-            // Crear el prompt según el tipo de documento
-            let prompt = '';
-            let fileName = '';
+            // Extraer medicamentos del reporte (simulación)
+            const medications = extractMedications(plainReport);
 
-            switch (type) {
-                case 'informe':
-                    prompt = `Genera un informe médico profesional basado en la siguiente información:
+            // Extraer exámenes del reporte (simulación)
+            const exams = extractExams(plainReport);
 
-Transcripción de la consulta:
-${transcription}
-
-Resumen médico:
-${plainSummary}
-
-Informe médico:
-${plainReport}
-
-Formato el contenido como un informe médico profesional con:
-- Encabezado con datos del paciente
-- Motivo de consulta
-- Antecedentes
-- Examen físico
-- Diagnóstico
-- Tratamiento
-- Recomendaciones
-- Firma del médico`;
-                    fileName = 'Informe Médico.pdf';
-                    break;
-
-                case 'receta':
-                    prompt = `Genera una receta médica basada en la siguiente información:
-
-Transcripción de la consulta:
-${transcription}
-
-Informe médico:
-${plainReport}
-
-Extrae todos los medicamentos mencionados y crea una receta médica profesional con:
-- Datos del paciente
-- Medicamentos con dosis y frecuencia
-- Instrucciones de uso
-- Firma del médico
-- Fecha de emisión`;
-                    fileName = 'Receta Médica.pdf';
-                    break;
-
-                case 'examen':
-                    prompt = `Genera una solicitud de exámenes médicos basada en la siguiente información:
-
-Transcripción de la consulta:
-${transcription}
-
-Informe médico:
-${plainReport}
-
-Crea una solicitud de exámenes con:
-- Datos del paciente
-- Exámenes solicitados con indicaciones
-- Instrucciones de preparación
-- Firma del médico
-- Fecha de emisión`;
-                    fileName = 'Solicitud de Exámenes.pdf';
-                    break;
-            }
-
-            // Llamar a la API para generar el PDF
-            const response = await fetch('/api/generate-pdf', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    prompt,
-                    type,
+            const pdfData: PDFGenerationData = {
+                type,
+                patientName: 'Paciente',
+                patientId: 'N/A',
+                doctorName: 'Dr. Médico',
+                doctorId: 'N/A',
+                date: new Date().toLocaleDateString('es-ES'),
+                content: {
                     transcription,
-                    summary: plainSummary,
-                    report: plainReport
-                })
-            });
+                    medicalSummary: plainSummary,
+                    generalReport: plainReport
+                },
+                medications,
+                exams
+            };
 
-            if (!response.ok) {
-                throw new Error('Error al generar el PDF');
-            }
-
-            // Descargar el PDF
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+            const fileName = getFileName(type);
+            downloadPDF(pdfData, fileName);
 
         } catch (error) {
             console.error('Error generating PDF:', error);
             setError(`Error al generar ${type}: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        }
+    };
+
+    const extractMedications = (report: string) => {
+        // Simulación de extracción de medicamentos
+        const medications: Array<{
+            name: string;
+            dosage: string;
+            frequency: string;
+            duration: string;
+            instructions?: string;
+        }> = [];
+        const medRegex = /(?:medicamento|medicina|fármaco|medicación)[\s\S]*?(?:tramadol|ibuprofeno|paracetamol|aspirina|omeprazol)/gi;
+        const matches = report.match(medRegex);
+
+        if (matches) {
+            matches.forEach(match => {
+                if (match.toLowerCase().includes('tramadol')) {
+                    medications.push({
+                        name: 'Tramadol',
+                        dosage: '50mg',
+                        frequency: 'Cada 8 horas',
+                        duration: '7 días',
+                        instructions: 'Tomar con alimentos'
+                    });
+                }
+            });
+        }
+
+        return medications;
+    };
+
+    const extractExams = (report: string) => {
+        // Simulación de extracción de exámenes
+        const exams: Array<{
+            name: string;
+            description: string;
+            instructions?: string;
+        }> = [];
+
+        if (report.toLowerCase().includes('radiografía')) {
+            exams.push({
+                name: 'Radiografía de columna',
+                description: 'Estudio radiológico de la columna vertebral',
+                instructions: 'Ayuno no necesario. Retirar objetos metálicos.'
+            });
+        }
+
+        if (report.toLowerCase().includes('sangre') || report.toLowerCase().includes('laboratorio')) {
+            exams.push({
+                name: 'Hemograma completo',
+                description: 'Análisis de sangre completo',
+                instructions: 'Ayuno de 8 horas. Presentarse en la mañana.'
+            });
+        }
+
+        return exams;
+    };
+
+    const getFileName = (type: 'informe' | 'receta' | 'examen') => {
+        const date = new Date().toISOString().split('T')[0];
+        switch (type) {
+            case 'informe': return `Informe_Médico_${date}.html`;
+            case 'receta': return `Receta_Médica_${date}.html`;
+            case 'examen': return `Solicitud_Exámenes_${date}.html`;
+            default: return `Documento_${date}.html`;
         }
     };
 
