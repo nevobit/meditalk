@@ -192,17 +192,82 @@ export default function ReportGeneration() {
             const consultaType = Object.keys(content)[0] || 'Consulta General';
             console.log('consultaType', content);
 
+            // Helper function to safely access possible keys in content/sections
+            const getValue = (section: unknown, keys: string[]) => {
+                if (!section || typeof section !== 'object') return undefined;
+                for (const key of keys) {
+                    if (Object.prototype.hasOwnProperty.call(section, key)) {
+                        return section[key as keyof typeof section];
+                    }
+                }
+                return undefined;
+            };
+
+            // For handling both actual main section and root-level props
+            const section = (content as Record<string, unknown>)[consultaType] || {};
+
             return `<h2><strong>${consultaType}</strong></h2>
-<p><strong>Motivo de Consulta:</strong> ${formatValue(content[consultaType]?.['Motivo de Consulta'] || content['Motivo de Consulta'] || content[consultaType]?.Motivo_de_Consulta || content.Motivo_de_Consulta || 'No se discutió')}</p>
-<p><strong>Síntomas:</strong> ${formatValue(content[consultaType]?.Síntomas || content.Síntomas || 'No se discutieron')}</p>
-<p><strong>Historia Personal:</strong> ${formatValue(content[consultaType]?.['Historia Personal'] || content['Historia Personal'] || content[consultaType]?.Historia_Personal || content.Historia_Personal || 'No se discutió')}</p>
-<p><strong>Historia Familiar:</strong> ${formatValue(content[consultaType]?.['Historia Familiar'] || content['Historia Familiar'] || content[consultaType]?.Historia_Familiar || content.Historia_Familiar || 'No se discutió')}</p>
-<p><strong>Exploración Física:</strong> ${formatValue(content[consultaType]?.['Exploración Física'] || content['Exploración Física'] || content[consultaType]?.Exploración_Física || content.Exploración_Física || 'No se realizó ninguna exploración física')}</p>
-<p><strong>Diagnóstico:</strong> ${formatValue(content[consultaType]?.Diagnóstico || content.Diagnóstico || 'No se proporcionó ningún diagnóstico')}</p>
-<p><strong>Tratamiento Prescrito:</strong> ${formatValue(content[consultaType]?.['Tratamiento Prescrito'] || content['Tratamiento Prescrito'] || content[consultaType]?.Tratamiento_Prescrito || content.Tratamiento_Prescrito || 'No se prescribió ningún tratamiento')}</p>
-<p><strong>Exámenes Solicitados:</strong> ${formatValue(content[consultaType]?.['Exámenes Solicitados'] || content['Exámenes Solicitados'] || content[consultaType]?.Exámenes_Solicitados || content.Exámenes_Solicitados || 'No se solicitaron exámenes')}</p>
-<p><strong>Derivaciones:</strong> ${formatValue(content[consultaType]?.Derivaciones || content.Derivaciones || 'No se indicaron derivaciones')}</p>
-<p><strong>Receta Médica:</strong> ${formatValue(content[consultaType]?.['Receta Médica'] || content['Receta Médica'] || content[consultaType]?.Receta_Médica || content.Receta_Médica || 'No se recetaron medicamentos')}</p>`;
+<p><strong>Motivo de Consulta:</strong> ${
+                formatValue(
+                    getValue(section, ['Motivo de Consulta', 'Motivo_de_Consulta']) ??
+                    getValue(content, ['Motivo de Consulta', 'Motivo_de_Consulta']) ??
+                    'No se discutió'
+                )
+                }</p>
+<p><strong>Síntomas:</strong> ${formatValue(
+                    getValue(section, ['Síntomas']) ??
+                    getValue(content, ['Síntomas']) ??
+                    'No se discutieron'
+                )
+                }</p>
+<p><strong>Historia Personal:</strong> ${formatValue(
+                    getValue(section, ['Historia Personal', 'Historia_Personal']) ??
+                    getValue(content, ['Historia Personal', 'Historia_Personal']) ??
+                    'No se discutió'
+                )
+                }</p>
+<p><strong>Historia Familiar:</strong> ${formatValue(
+                    getValue(section, ['Historia Familiar', 'Historia_Familiar']) ??
+                    getValue(content, ['Historia Familiar', 'Historia_Familiar']) ??
+                    'No se discutió'
+                )
+                }</p>
+<p><strong>Exploración Física:</strong> ${formatValue(
+                    getValue(section, ['Exploración Física', 'Exploración_Física']) ??
+                    getValue(content, ['Exploración Física', 'Exploración_Física']) ??
+                    'No se realizó ninguna exploración física'
+                )
+                }</p>
+<p><strong>Diagnóstico:</strong> ${formatValue(
+                    getValue(section, ['Diagnóstico']) ??
+                    getValue(content, ['Diagnóstico']) ??
+                    'No se proporcionó ningún diagnóstico'
+                )
+                }</p>
+<p><strong>Tratamiento Prescrito:</strong> ${formatValue(
+                    getValue(section, ['Tratamiento Prescrito', 'Tratamiento_Prescrito']) ??
+                    getValue(content, ['Tratamiento Prescrito', 'Tratamiento_Prescrito']) ??
+                    'No se prescribió ningún tratamiento'
+                )
+                }</p>
+<p><strong>Exámenes Solicitados:</strong> ${formatValue(
+                    getValue(section, ['Exámenes Solicitados', 'Exámenes_Solicitados']) ??
+                    getValue(content, ['Exámenes Solicitados', 'Exámenes_Solicitados']) ??
+                    'No se solicitaron exámenes'
+                )
+                }</p>
+<p><strong>Derivaciones:</strong> ${formatValue(
+                    getValue(section, ['Derivaciones']) ??
+                    getValue(content, ['Derivaciones']) ??
+                    'No se indicaron derivaciones'
+                )
+                }</p>
+<p><strong>Receta Médica:</strong> ${formatValue(
+                    getValue(section, ['Receta Médica', 'Receta_Médica']) ??
+                    getValue(content, ['Receta Médica', 'Receta_Médica']) ??
+                    'No se recetaron medicamentos'
+                )
+                }</p>`;
         }
 
         // Si es un string y ya está en formato estructurado, lo mantenemos

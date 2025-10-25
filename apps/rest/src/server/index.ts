@@ -81,10 +81,10 @@ async function main() {
     // postgresqldb: {
     //   postgresUrl: env.DATABASE_URL,
     // },
-    // redisdb: {
-    //   redisReadUrl: env.REDIS_URL,
-    //   redisWriteUrl: env.REDIS_URL,
-    // },
+    redisdb: {
+      redisReadUrl: env.REDIS_URL,
+      redisWriteUrl: env.REDIS_URL,
+    },
   });
 
 

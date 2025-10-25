@@ -30,7 +30,7 @@ export interface GenerateReportResponse {
 }
 
 export interface ProcessAudioDto {
-    audioFile: Buffer<ArrayBufferLike>;
+    audioFile: unknown
     audioMetadata: AudioMetadata;
     aiConfig: AIConfig;
     templateId: string;
