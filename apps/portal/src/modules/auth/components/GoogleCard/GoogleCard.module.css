@@ -263,3 +263,25 @@
   color: var(--muted);
   font-size: 11.5px;
 }
+
+.linkBtn {
+  color: var(--ring);
+  background: transparent;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 200px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 10px 14px;
+}

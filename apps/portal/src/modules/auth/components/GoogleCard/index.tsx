@@ -3,7 +3,7 @@ import styles from "./GoogleCard.module.css";
 import { Button, Input, Tooltip, useForm } from "@mdi/design-system";
 import { useLogin, useRegisterVerify } from "../../hooks";
 import { useSession } from "@/shared";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const GoogleIcon = () => (
     <svg aria-hidden="true" viewBox="0 0 24 24" className={styles.btnIcon}>
@@ -126,6 +126,7 @@ const GoogleCard = () => {
                         </div>
                     </form>
                 )}
+                <Link to="/signup" className={styles.linkBtn}>Registrarse</Link>
                 <footer className={styles.footer}>
                     Al continuar, aceptas nuestros Términos y Política de Privacidad. • Los códigos expiran en 10 minutos.
                 </footer>
