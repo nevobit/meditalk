@@ -9,7 +9,7 @@ export const processAudio = async (data: ProcessAudioDto): Promise<ProcessAudioR
         const transcriptionStartTime = Date.now();
         const transcriptionResult = await transcribe({
             filename: data.audioMetadata.filename,
-            file: data.audioFile, 
+            file: data.audioFile as Buffer<ArrayBufferLike>, 
             model: data.aiConfig.model,
             mimetype: data.audioMetadata.mimeType,
             language: data.aiConfig.language
