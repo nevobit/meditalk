@@ -44,7 +44,7 @@ Extrae la siguiente información en formato JSON:
    - description: descripción del examen
    - instructions: instrucciones de preparación (ej: "ayuno de 8 horas", "retirar objetos metálicos")
 
-Responde SOLO con el JSON, sin texto adicional. Si no hay medicamentos o exámenes, devuelve arrays vacíos.
+Responde SOLO con el JSON, sin texto adicional. Si no hay medicamentos o exámenes, devuelve arrays vacíos., y cuanod algo no se especifique, di "No se especificó".
 `;
 
         const response = await axios.post(
