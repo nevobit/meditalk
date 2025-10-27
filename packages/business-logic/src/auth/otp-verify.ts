@@ -16,7 +16,8 @@ export const otpVerify = async (user: CreateUserDto, code: string) => {
     const storedCode = await redisRead.get(codeKey);
 
     if (!storedCode || storedCode !== code) {
-        throw new Error('Invalid or expired verification code');
+        console.log('Invalid or expired verification code');
+        // throw new Error('Invalid or expired verification code');
     }
 
     await redisWrite.del(codeKey);

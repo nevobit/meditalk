@@ -28,7 +28,7 @@ export const useCreateReport = () => {
     return useMutation({
         mutationKey: reportKeys.mutation('create'),
         mutationFn: createReport,
-        onSuccess: (data, variables) => {
+        onSuccess: (_, variables) => {
             // Invalidate and refetch reports list for the user
             queryClient.invalidateQueries({
                 queryKey: reportKeys.list(variables.userId)
@@ -63,7 +63,7 @@ export const useProcessAudioAndSave = () => {
     return useMutation({
         mutationKey: reportKeys.mutation('process'),
         mutationFn: processAudioAndSave,
-        onSuccess: (data, variables) => {
+        onSuccess: (_, variables) => {
             // Invalidate reports list for the user
             queryClient.invalidateQueries({
                 queryKey: reportKeys.list(variables.userId)
