@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useReport, useUpdateReport } from "../../../../shared/api/report-queries";
-import { downloadPDF, type PDFGenerationData } from "../../../../services/pdfService";
+import { generatePDFWithAI, type PDFGenerationData } from "../../../../services/pdfService";
 import RichTextEditor from "../../components/RichTextEditor";
 import styles from "./ReportView.module.css";
 import { Menus } from "@mdi/design-system";
@@ -123,12 +123,6 @@ export default function ReportView() {
             const plainSummary = htmlToPlainText(editableSummary);
             const plainReport = htmlToPlainText(editableReport);
 
-            // Extraer medicamentos del reporte (simulación)
-            const medications = extractMedications(plainReport);
-
-            // Extraer exámenes del reporte (simulación)
-            const exams = extractExams(plainReport);
-
             const pdfData: PDFGenerationData = {
                 type,
                 patientName: 'Paciente',
@@ -141,12 +135,14 @@ export default function ReportView() {
                     medicalSummary: plainSummary,
                     generalReport: plainReport
                 },
-                medications,
-                exams
+                medications: [],
+                exams: []
             };
 
             const fileName = getFileName(type);
-            downloadPDF(pdfData, fileName);
+
+            // Usar la nueva función con IA para extracción automática
+            await generatePDFWithAI(pdfData, fileName);
 
         } catch (error) {
             console.error('Error generating PDF:', error);
@@ -154,59 +150,6 @@ export default function ReportView() {
         }
     };
 
-    const extractMedications = (report: string) => {
-        const medications: Array<{
-            name: string;
-            dosage: string;
-            frequency: string;
-            duration: string;
-            instructions?: string;
-        }> = [];
-        const medRegex = /(?:medicamento|medicina|fármaco|medicación)[\s\S]*?(?:tramadol|ibuprofeno|paracetamol|aspirina|omeprazol)/gi;
-        const matches = report.match(medRegex);
-
-        if (matches) {
-            matches.forEach(match => {
-                if (match.toLowerCase().includes('tramadol')) {
-                    medications.push({
-                        name: 'Tramadol',
-                        dosage: '50mg',
-                        frequency: 'Cada 8 horas',
-                        duration: '7 días',
-                        instructions: 'Tomar con alimentos'
-                    });
-                }
-            });
-        }
-
-        return medications;
-    };
-
-    const extractExams = (report: string) => {
-        const exams: Array<{
-            name: string;
-            description: string;
-            instructions?: string;
-        }> = [];
-
-        if (report.toLowerCase().includes('radiografía')) {
-            exams.push({
-                name: 'Radiografía de columna',
-                description: 'Estudio radiológico de la columna vertebral',
-                instructions: 'Ayuno no necesario. Retirar objetos metálicos.'
-            });
-        }
-
-        if (report.toLowerCase().includes('sangre') || report.toLowerCase().includes('laboratorio')) {
-            exams.push({
-                name: 'Hemograma completo',
-                description: 'Análisis de sangre completo',
-                instructions: 'Ayuno de 8 horas. Presentarse en la mañana.'
-            });
-        }
-
-        return exams;
-    };
 
     const getFileName = (type: 'informe' | 'receta' | 'examen') => {
         const date = new Date().toISOString().split('T')[0];

@@ -377,3 +377,42 @@ export const downloadPDF = (data: PDFGenerationData, filename: string) => {
         document.body.removeChild(a);
     });
 };
+
+export const generatePDFWithAI = async (data: PDFGenerationData, filename: string) => {
+    try {
+        const response = await fetch('/api/generate-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                prompt: `Genera un ${data.type} médico profesional basado en la siguiente información:`,
+                type: data.type,
+                transcription: data.content.transcription || '',
+                summary: data.content.medicalSummary || '',
+                report: typeof data.content.generalReport === 'string'
+                    ? data.content.generalReport
+                    : JSON.stringify(data.content.generalReport)
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error('Error generating PDF with AI:', error);
+        // Fallback to local PDF generation
+        downloadPDF(data, filename);
+    }
+};
