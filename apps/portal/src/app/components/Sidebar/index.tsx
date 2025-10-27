@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { ChevronLeft, ChevronRight, ChevronDown, LogOut, User, Settings, Wifi, WifiOff } from "lucide-react";
 import styles from "./Sidebar.module.css";
 import type { SidebarGroup, SidebarItem } from "./types";
 import { Avatar } from "@mdi/design-system";
 import { useSession } from "@/shared";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     orgName: string;
@@ -37,6 +38,9 @@ export default function Sidebar({
 }: Props) {
     const isControlled = typeof controlledCollapsed === "boolean";
     const [localCollapsed, setLocalCollapsed] = useState<boolean>(defaultCollapsed);
+    const [userMenuOpen, setUserMenuOpen] = useState<boolean>(false);
+    const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+    const userMenuRef = useRef<HTMLDivElement>(null);
     const { signOut } = useSession();
 
     useEffect(() => {
@@ -44,6 +48,37 @@ export default function Sidebar({
         const saved = window.localStorage.getItem(storageKey);
         if (saved != null) setLocalCollapsed(saved === "1");
     }, [isControlled, storageKey]);
+
+    // Cerrar menú de usuario al hacer clic fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setUserMenuOpen(false);
+            }
+        };
+
+        if (userMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [userMenuOpen]);
+
+    // Monitorear estado de conexión
+    useEffect(() => {
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
 
     const collapsed = isControlled ? (controlledCollapsed as boolean) : localCollapsed;
 
@@ -56,6 +91,13 @@ export default function Sidebar({
     };
 
     const chevDir = collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />;
+
+    const navigate = useNavigate();
+    const handleSignOut = () => {
+        setUserMenuOpen(false);
+        signOut();
+        navigate("/signin");
+    };
 
     return (
         <aside className={`${styles.wrap} ${collapsed ? styles.collapsed : ""}`} aria-label="Sidebar">
@@ -114,10 +156,59 @@ export default function Sidebar({
                 </nav>
 
                 <div className={styles.footer}>
-                    <button className={styles.user} title={userName} onClick={() => signOut()}> 
-                        <Avatar src={userAvatarUrl} name={userName} size="sm" />
-                        {!collapsed && <span className={styles.userName}>{userName}</span>}
-                    </button>
+                    <div className={styles.userContainer} ref={userMenuRef}>
+                        <button
+                            className={`${styles.user} ${!isOnline ? styles.userOffline : ''}`}
+                            title={userName}
+                            onClick={() => setUserMenuOpen(!userMenuOpen)}
+                        >
+                            <div className={styles.avatarContainer}>
+                                <Avatar src={userAvatarUrl} name={userName} size="sm" />
+                                {!isOnline && <div className={styles.offlineIndicator}></div>}
+                            </div>
+                            {!collapsed && <span className={styles.userName}>{userName}</span>}
+                            {!collapsed && <ChevronDown size={14} className={`${styles.userChevron} ${userMenuOpen ? styles.open : ''}`} />}
+                        </button>
+
+                        {userMenuOpen && (
+                            <div className={styles.userMenu}>
+                                <div className={styles.userMenuHeader}>
+                                    <Avatar src={userAvatarUrl} name={userName} size="md" />
+                                    <div className={styles.userInfo}>
+                                        <div className={styles.userInfoName}>{userName}</div>
+                                        <div className={styles.userInfoEmail}>usuario@meditalk.com</div>
+                                        <div className={styles.connectionStatus}>
+                                            {isOnline ? (
+                                                <><Wifi size={12} className={styles.connectionIcon} /> Conectado</>
+                                            ) : (
+                                                <><WifiOff size={12} className={styles.connectionIcon} /> Sin conexión</>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={styles.userMenuSeparator}></div>
+
+                                <div className={styles.userMenuItems}>
+                                    <button className={styles.userMenuItem} onClick={() => setUserMenuOpen(false)}>
+                                        <User size={16} />
+                                        <span>Perfil</span>
+                                    </button>
+                                    <button className={styles.userMenuItem} onClick={() => setUserMenuOpen(false)}>
+                                        <Settings size={16} />
+                                        <span>Configuración</span>
+                                    </button>
+                                </div>
+
+                                <div className={styles.userMenuSeparator}></div>
+
+                                <button className={`${styles.userMenuItem} ${styles.userMenuItemDanger}`} onClick={handleSignOut}>
+                                    <LogOut size={16} />
+                                    <span>Cerrar Sesión</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

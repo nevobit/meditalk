@@ -10,9 +10,16 @@ import { Menus } from "@mdi/design-system";
 import { BookOpenCheck, Copy, FileText, PillBottle, Save } from "lucide-react";
 import { useSession } from "@/shared";
 export const htmlToPlainText = (html: string): string => {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    return tempDiv.textContent || tempDiv.innerText || '';
+    // Primero convertir elementos HTML de salto de línea a saltos de línea reales
+    const withLineBreaks = html
+        .replace(/<br\s*\/?>/gi, '\n')  // <br> y <br/> a \n
+        .replace(/<\/p>/gi, '\n')       // </p> a \n
+        .replace(/<p[^>]*>/gi, '')      // <p> (sin cerrar) se elimina
+        .replace(/<\/div>/gi, '\n')     // </div> a \n
+        .replace(/<div[^>]*>/gi, '')    // <div> (sin cerrar) se elimina
+        .replace(/<[^>]*>/g, '');       // Eliminar cualquier otro tag HTML
+
+    return withLineBreaks;
 };
 type AudioData = {
     audioBlob: Blob;
@@ -337,9 +344,7 @@ export default function ReportGeneration() {
     const generatePDF = async (type: 'informe' | 'receta' | 'examen') => {
         try {
             const plainSummary = htmlToPlainText(editableSummary);
-            console.log('plainSummary', plainSummary);
             const plainReport = JSON.stringify(editableReport);
-            console.log('plainReport', plainReport);
             const transcription = reportData?.transcription || '';
 
             const pdfData: PDFGenerationData = {

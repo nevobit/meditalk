@@ -26,10 +26,16 @@ export interface PDFGenerationData {
     }>;
 }
 
-const formatReportContent = (content: string | Record<string, unknown> | undefined): string => {
-    console.log('content', content);
-    console.log('formatReportContent input:', content, 'type:', typeof content);
+// Función auxiliar para convertir saltos de línea a HTML
+const convertLineBreaksToHTML = (text: string): string => {
+    if (!text) return '';
+    return text
+        .replace(/\r\n/g, '<br/>')  // Windows line breaks first
+        .replace(/\n/g, '<br/>')    // Unix line breaks
+        .replace(/\r/g, '<br/>');   // Mac line breaks
+};
 
+const formatReportContent = (content: string | Record<string, unknown> | undefined): string => {
     if (!content) return 'No disponible';
 
     if (typeof content === 'string') {
@@ -38,8 +44,8 @@ const formatReportContent = (content: string | Record<string, unknown> | undefin
             const parsed = JSON.parse(content);
             return formatMedicalReport(parsed);
         } catch {
-            // Si no es JSON válido, devolver el string tal como está
-            return content;
+            // Si no es JSON válido, convertir saltos de línea a <br/> y devolver el string
+            return convertLineBreaksToHTML(content);
         }
     }
 
@@ -47,18 +53,18 @@ const formatReportContent = (content: string | Record<string, unknown> | undefin
         return formatMedicalReport(content);
     }
 
-    return String(content);
+    return convertLineBreaksToHTML(String(content));
 };
 
 const formatMedicalReport = (content: Record<string, unknown>): string => {
     const formatValue = (value: unknown): string => {
         if (typeof value === 'string') {
-            return value;
+            return convertLineBreaksToHTML(value);
         }
         if (Array.isArray(value)) {
             return value.join(', ');
         }
-        return String(value);
+        return convertLineBreaksToHTML(String(value));
     };
 
     // Extraer el tipo de consulta del objeto
@@ -279,7 +285,7 @@ const generateHTML = (data: PDFGenerationData): string => {
                     ${content.transcription ? `
                     <div class="content-section">
                         <h3 class="section-title">Transcripción de la Consulta</h3>
-                        <p>${content.transcription}</p>
+                        <p>${convertLineBreaksToHTML(content.transcription)}</p>
                     </div>
                     ` : ''}
                 `;

@@ -117,6 +117,13 @@ export const generatePdfRoute: RouteOptions = {
             const extractedData = await extractMedicalData(transcription, summary, report);
 
             return reply.code(200).send({
+                content: {
+                    medicalSummary: summary,
+                    generalReport: report,
+                    transcription: transcription
+                },
+                report: report,
+                transcription: transcription,
                 medications: extractedData.medications,
                 exams: extractedData.exams,
                 type: type
