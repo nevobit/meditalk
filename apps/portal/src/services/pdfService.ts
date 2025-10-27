@@ -1,3 +1,5 @@
+import { api } from "@/shared/api";
+
 export interface PDFGenerationData {
     type: 'informe' | 'receta' | 'examen';
     patientName?: string;
@@ -89,6 +91,7 @@ const formatMedicalReport = (content: Record<string, unknown>): string => {
 };
 
 const generateHTML = (data: PDFGenerationData): string => {
+    console.log('data', data);
     const { type, patientName = 'Paciente', patientId = 'N/A', doctorName = 'Dr. Médico', doctorId = 'N/A', date, content, medications = [], exams = [] } = data;
 
     console.log('content.generalReport', content);
@@ -380,12 +383,8 @@ export const downloadPDF = (data: PDFGenerationData, filename: string) => {
 
 export const generatePDFWithAI = async (data: PDFGenerationData, filename: string) => {
     try {
-        const response = await fetch('/api/generate-pdf', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        const { data: response } = await api.post('/generate-pdf',
+            {
                 prompt: `Genera un ${data.type} médico profesional basado en la siguiente información:`,
                 type: data.type,
                 transcription: data.content.transcription || '',
@@ -393,23 +392,14 @@ export const generatePDFWithAI = async (data: PDFGenerationData, filename: strin
                 report: typeof data.content.generalReport === 'string'
                     ? data.content.generalReport
                     : JSON.stringify(data.content.generalReport)
-            })
-        });
+            }
+        );
 
-        if (!response.ok) {
+        if (!response) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-
+        downloadPDF(response, filename);
     } catch (error) {
         console.error('Error generating PDF with AI:', error);
         // Fallback to local PDF generation
