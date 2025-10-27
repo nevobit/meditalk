@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import styles from "./Sidebar.module.css";
 import type { SidebarGroup, SidebarItem } from "./types";
 import { Avatar } from "@mdi/design-system";
+import { useSession } from "@/shared";
 
 type Props = {
     orgName: string;
@@ -36,6 +37,7 @@ export default function Sidebar({
 }: Props) {
     const isControlled = typeof controlledCollapsed === "boolean";
     const [localCollapsed, setLocalCollapsed] = useState<boolean>(defaultCollapsed);
+    const { signOut } = useSession();
 
     useEffect(() => {
         if (isControlled) return;
@@ -112,10 +114,10 @@ export default function Sidebar({
                 </nav>
 
                 <div className={styles.footer}>
-                    <div className={styles.user} title={userName}>
+                    <button className={styles.user} title={userName} onClick={() => signOut()}> 
                         <Avatar src={userAvatarUrl} name={userName} size="sm" />
                         {!collapsed && <span className={styles.userName}>{userName}</span>}
-                    </div>
+                    </button>
                 </div>
             </div>
 

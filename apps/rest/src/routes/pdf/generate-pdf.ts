@@ -4,6 +4,154 @@ import { PDFDocument, PDFFont, rgb, StandardFonts } from 'pdf-lib';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
+interface ExtractedMedication {
+    name: string;
+    dosage: string;
+    frequency: string;
+    duration: string;
+    instructions?: string;
+}
+
+interface ExtractedExam {
+    name: string;
+    description: string;
+    instructions?: string;
+}
+
+interface ExtractedData {
+    medications: ExtractedMedication[];
+    exams: ExtractedExam[];
+}
+
+const extractMedicalData = async (transcription: string, summary: string, report: string): Promise<ExtractedData> => {
+    try {
+        const extractionPrompt = `
+Analiza el siguiente contenido médico y extrae información estructurada:
+
+TRANSCRIPCIÓN: ${transcription}
+RESUMEN: ${summary}
+INFORME: ${report}
+
+Extrae la siguiente información en formato JSON:
+
+1. MEDICAMENTOS (si los hay):
+   - name: nombre del medicamento
+   - dosage: dosis (ej: "500mg", "1 tableta")
+   - frequency: frecuencia (ej: "cada 8 horas", "2 veces al día")
+   - duration: duración del tratamiento (ej: "7 días", "hasta completar")
+   - instructions: instrucciones especiales (ej: "con alimentos", "en ayunas")
+
+2. EXÁMENES (si los hay):
+   - name: nombre del examen
+   - description: descripción del examen
+   - instructions: instrucciones de preparación (ej: "ayuno de 8 horas", "retirar objetos metálicos")
+
+Responde SOLO con el JSON, sin texto adicional. Si no hay medicamentos o exámenes, devuelve arrays vacíos.
+`;
+
+        const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-4.1-mini-2025-04-14',
+                messages: [
+                    {
+                        role: 'system',
+                        content: 'Eres un asistente médico experto en extraer información estructurada de textos médicos. Responde ÚNICAMENTE con JSON válido.'
+                    },
+                    {
+                        role: 'user',
+                        content: extractionPrompt
+                    }
+                ],
+                max_tokens: 2000,
+                temperature: 0.1
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 30000
+            }
+        );
+
+        const extractedContent = response.data.choices[0].message.content;
+        const parsedData = JSON.parse(extractedContent);
+
+        return {
+            medications: parsedData.medications || [],
+            exams: parsedData.exams || []
+        };
+    } catch (error) {
+        console.error('Error extracting medical data:', error);
+        return {
+            medications: [],
+            exams: []
+        };
+    }
+};
+
+const getSystemPrompt = (type: string, extractedData: ExtractedData): string => {
+    const basePrompt = 'Eres un asistente médico experto especializado en generar documentos médicos profesionales. Responde siempre en formato de texto plano, sin markdown, listo para ser convertido a PDF.';
+
+    switch (type) {
+        case 'receta':
+            return `${basePrompt}
+
+INFORMACIÓN EXTRAÍDA:
+Medicamentos: ${JSON.stringify(extractedData.medications, null, 2)}
+
+Genera una receta médica profesional que incluya:
+- Encabezado con datos del paciente y médico
+- Lista de medicamentos con dosis, frecuencia y duración
+- Instrucciones de uso
+- Firma del médico
+- Fecha de emisión
+
+Usa la información extraída para crear la receta de manera precisa.`;
+
+        case 'examen':
+            return `${basePrompt}
+
+INFORMACIÓN EXTRAÍDA:
+Exámenes: ${JSON.stringify(extractedData.exams, null, 2)}
+
+Genera una solicitud de exámenes médicos profesional que incluya:
+- Encabezado con datos del paciente y médico
+- Lista de exámenes solicitados con descripción
+- Instrucciones de preparación
+- Indicaciones médicas
+- Firma del médico
+- Fecha de emisión
+
+Usa la información extraída para crear la solicitud de manera precisa.`;
+
+        case 'informe':
+            return `${basePrompt}
+
+INFORMACIÓN EXTRAÍDA:
+Medicamentos: ${JSON.stringify(extractedData.medications, null, 2)}
+Exámenes: ${JSON.stringify(extractedData.exams, null, 2)}
+
+Genera un informe médico profesional que incluya:
+- Encabezado con datos del paciente y médico
+- Motivo de consulta
+- Antecedentes
+- Examen físico
+- Diagnóstico
+- Tratamiento prescrito (usando los medicamentos extraídos)
+- Exámenes solicitados (usando los exámenes extraídos)
+- Recomendaciones
+- Firma del médico
+- Fecha de emisión
+
+Usa la información extraída para crear el informe de manera precisa.`;
+
+        default:
+            return basePrompt;
+    }
+};
+
 export const generatePdfRoute: RouteOptions = {
     method: 'POST',
     url: '/generate-pdf',
@@ -47,7 +195,13 @@ export const generatePdfRoute: RouteOptions = {
     },
     handler: async (request, reply) => {
         try {
-            const { prompt, type } = request.body as { prompt: string; type: string };
+            const { prompt, type, transcription, summary, report } = request.body as {
+                prompt: string;
+                type: string;
+                transcription: string;
+                summary: string;
+                report: string;
+            };
 
             if (!OPENAI_API_KEY) {
                 return reply.code(500).send({
@@ -55,6 +209,9 @@ export const generatePdfRoute: RouteOptions = {
                     detail: 'Please configure OPENAI_API_KEY environment variable'
                 });
             }
+
+            // Extraer medicamentos y exámenes usando IA
+            const extractedData = await extractMedicalData(transcription, summary, report);
 
             // Llamar a OpenAI para generar el contenido del documento
             const aiResponse = await axios.post(
@@ -64,7 +221,7 @@ export const generatePdfRoute: RouteOptions = {
                     messages: [
                         {
                             role: 'system',
-                            content: 'Eres un asistente médico experto especializado en generar documentos médicos profesionales. Responde siempre en formato de texto plano, sin markdown, listo para ser convertido a PDF.'
+                            content: getSystemPrompt(type, extractedData)
                         },
                         {
                             role: 'user',
