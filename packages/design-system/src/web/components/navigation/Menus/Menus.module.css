@@ -43,6 +43,7 @@
     box-shadow: var(--ds-elevation-popover);
     padding: 0.4rem;
     overflow: auto;
+    top: 36px !important;
   }
 
   .item {

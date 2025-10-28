@@ -77,7 +77,6 @@
 
 .thead th {
   position: sticky;
-  top: 80px; /* altura aproximada del header de la card */
   z-index: 1;
   background: #f8fafc;
   color: var(--muted);

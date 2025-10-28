@@ -5,7 +5,7 @@ import { generatePDFWithAI, type PDFGenerationData } from "../../../../services/
 import RichTextEditor from "../../components/RichTextEditor";
 import styles from "./ReportView.module.css";
 import { Menus } from "@mdi/design-system";
-import { BookOpenCheck, Copy, FileText, PillBottle, Save, ArrowLeft } from "lucide-react";
+import { BookOpenCheck, Copy, FileText, PillBottle, Save, ArrowLeft, Loader2 } from "lucide-react";
 
 export const htmlToPlainText = (html: string): string => {
     // Primero convertir elementos HTML de salto de línea a saltos de línea reales
@@ -66,6 +66,7 @@ export default function ReportView() {
     const [editableSummary, setEditableSummary] = useState<string>("");
     const [editableReport, setEditableReport] = useState<string>("");
     const [isEditing, setIsEditing] = useState(false);
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
     // Initialize editable content when report loads
     useEffect(() => {
@@ -126,6 +127,7 @@ export default function ReportView() {
     const generatePDF = async (type: 'informe' | 'receta' | 'examen') => {
         if (!report) return;
 
+        setIsGeneratingPDF(true);
         try {
             const plainSummary = htmlToPlainText(editableSummary);
             const plainReport = htmlToPlainText(editableReport);
@@ -154,6 +156,8 @@ export default function ReportView() {
         } catch (error) {
             console.error('Error generating PDF:', error);
             alert(`Error al generar ${type}: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        } finally {
+            setIsGeneratingPDF(false);
         }
     };
 
@@ -232,14 +236,29 @@ export default function ReportView() {
                                         </Menus.Item>
                                         <Menus.Divider />
                                         <Menus.Label>Descargar:</Menus.Label>
-                                        <Menus.Item id="report" leadingIcon={<FileText strokeWidth={1.5} width={16} />} onClick={() => generatePDF('informe')}>
-                                            Informe PDF
+                                            <Menus.Item
+                                                id="report"
+                                                leadingIcon={isGeneratingPDF ? <Loader2 strokeWidth={1.5} width={16} className="animate-spin" /> : <FileText strokeWidth={1.5} width={16} />}
+                                                onClick={() => !isGeneratingPDF && generatePDF('informe')}
+                                                disabled={isGeneratingPDF}
+                                            >
+                                                {isGeneratingPDF ? 'Generando...' : 'Informe PDF'}
                                         </Menus.Item>
-                                        <Menus.Item id="recipe" leadingIcon={<PillBottle strokeWidth={1.5} width={16} />} onClick={() => generatePDF('receta')}>
-                                            Receta Médica
+                                            <Menus.Item
+                                                id="recipe"
+                                                leadingIcon={isGeneratingPDF ? <Loader2 strokeWidth={1.5} width={16} className="animate-spin" /> : <PillBottle strokeWidth={1.5} width={16} />}
+                                                onClick={() => !isGeneratingPDF && generatePDF('receta')}
+                                                disabled={isGeneratingPDF}
+                                            >
+                                                {isGeneratingPDF ? 'Generando...' : 'Receta Médica'}
                                         </Menus.Item>
-                                        <Menus.Item id="exams" leadingIcon={<BookOpenCheck strokeWidth={1.5} width={16} />} onClick={() => generatePDF('examen')}>
-                                            Solicitud de Exámenes
+                                            <Menus.Item
+                                                id="exams"
+                                                leadingIcon={isGeneratingPDF ? <Loader2 strokeWidth={1.5} width={16} className="animate-spin" /> : <BookOpenCheck strokeWidth={1.5} width={16} />}
+                                                onClick={() => !isGeneratingPDF && generatePDF('examen')}
+                                                disabled={isGeneratingPDF}
+                                            >
+                                                {isGeneratingPDF ? 'Generando...' : 'Solicitud de Exámenes'}
                                         </Menus.Item>
                                     </Menus.List>
                                 </div>
